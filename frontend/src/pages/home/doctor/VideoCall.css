@@ -1,0 +1,57 @@
+.join-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #181818;
+}
+
+.join-container h2 {
+  color: white;
+}
+
+.join-container input {
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.join-container button {
+  padding: 10px 15px;
+  background-color: #1a73e8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.join-container button:hover {
+  background-color: #0056b3;
+}
+.remote-video {
+  width: 100%; /* Responsive width */
+  height: auto; /* Maintain aspect ratio */
+  border: 2px solid #ccc; /* Add border for visual separation */
+  border-radius: 8px; /* Rounded corners */
+}
+.video-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Center the video and label */
+  margin: 10px; /* Space between video elements */
+}
+.username-label {
+  margin-top: 5px; /* Space between video and username */
+  color: white; /* Change text color to contrast with video */
+  font-weight: bold; /* Make the username stand out */
+}
+#medicineid{
+  bottom: 0;
+  left: 0;
+}
+#medsecond{
+  bottom: 0;
+  
+}

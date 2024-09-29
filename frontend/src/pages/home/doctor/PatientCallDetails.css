@@ -1,0 +1,13 @@
+.patient-details {
+    background-color: #f8f9fa;
+    height: 100vh;
+}
+
+.card {
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.btn-rounded {
+    border-radius: 50px;
+}

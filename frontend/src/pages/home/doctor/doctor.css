@@ -1,0 +1,11 @@
+option{
+    font-size: small;
+}
+select{
+    border: 1px solid;
+    border-radius: 5px;
+    border-width: thin;
+}
+.input-button{
+ text-align: center;
+}
