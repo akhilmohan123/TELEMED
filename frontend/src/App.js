@@ -17,6 +17,7 @@ import Videocall from './pages/home/doctor/Videocall';
 import Medicine from './pages/home/medicine/Medicine';
 import SpeceficMedicine from './pages/home/medicine/SpeceficMedicine';
 import Refer from './pages/home/refers/Refer';
+import Resetpassword from './pages/user/Resetpassword';
 function App() {
   return (
     <BrowserRouter>
@@ -38,6 +39,7 @@ function App() {
       <Route path='/get-medicine' element={<Medicine/>}/>
       <Route path='/specefic-medicine/:id' element={<SpeceficMedicine/>}/>
       <Route path='/get-refers' element={<Refer/>}/>
+      <Route path='/reset-password/:token' element={<Resetpassword/>}></Route>
       
      
     </Routes>
