@@ -6,9 +6,13 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from .models import User
+with open("C:/Users/user/Desktop/akhil/private.pem", "r") as f:
+    private_key = f.read()
 def generate_tokens(user):
+    print("private key is ====",private_key)
     access_payload={
         "id":user.id,
+        "email":user.email,
         "exp":timezone.now()+datetime.timedelta(minutes=15),
         "iat":timezone.now()
     }
@@ -18,8 +22,8 @@ def generate_tokens(user):
         "iat":timezone.now()
     }
 
-    access_token=jwt.encode(access_payload,"secret",algorithm="HS256")
-    refresh_token=jwt.encode(refresh_payload,"secret",algorithm="HS256")
+    access_token=jwt.encode(access_payload,private_key,algorithm="RS256")
+    refresh_token=jwt.encode(refresh_payload,private_key,algorithm="RS256")
 
     return access_token,refresh_token
 
@@ -36,7 +40,7 @@ class RefreshTokenView(APIView):
                 status=401
             )
         try:
-            payload=jwt.decode(refresh_token,'secret',algorithms=['HS256'])
+            payload=jwt.decode(refresh_token,private_key,algorithms=["RS256"])
             user=User.objects.get(id=payload['id'])
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed('Refresh token has expired')

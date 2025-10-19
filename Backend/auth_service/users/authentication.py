@@ -3,7 +3,8 @@ from django.conf import settings
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
-
+with open("C:/Users/user/Desktop/akhil/private.pem", "r") as f:
+    private_key = f.read()
 User = get_user_model()
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -19,7 +20,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
             print("Extracted token:", token)
             if not token:
                 return None
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
+            payload = jwt.decode(token, private_key, algorithms=["RS256"])
            
             user = User.objects.get(id=payload['id'])
             print(user)

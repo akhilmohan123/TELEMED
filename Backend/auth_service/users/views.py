@@ -1,7 +1,7 @@
 from rest_framework.permissions import AllowAny
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from . serializers import RegisterSerializer,LoginSerializer,UserSerializer
+from . serializers import PublicSerializer, RegisterSerializer,LoginSerializer,UserSerializer
 from . models import User
 from rest_framework.exceptions import AuthenticationFailed
 from django.utils import timezone
@@ -155,5 +155,14 @@ class ResetPasswordView(APIView):
     
         
         
-        
+class PublicUserView(APIView):
+    permission_classes=[AllowAny]
+    def get(self, request):
+        try:
+            user = User.objects.all()
+            serializer = PublicSerializer(user,many=True)
+            print(serializer.data)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
         
