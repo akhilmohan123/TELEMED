@@ -1,7 +1,5 @@
 from rest_framework import serializers
 from .models import PatientProfile
-from user.serializers import UserSerializer
-from doctor.models import DoctorModel
 class PatientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
@@ -9,6 +7,7 @@ class PatientProfileSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'user']
 
     def create(self, validated_data):
+        print("create patientprofile serializer called")
         # We don't need to handle user here, it's done in the view.
         profile = PatientProfile.objects.create(**validated_data)
         return profile
