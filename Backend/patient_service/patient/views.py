@@ -13,14 +13,12 @@ class PatientProfileCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIV
     authentication_classes = [JWTAuthentication]
 
     def get_object(self):
-        print("called get_object")
         try:
             return PatientProfile.objects.get(user=self.request.user.id)
         except PatientProfile.DoesNotExist:
             return None
 
     def create(self, request, *args, **kwargs):
-        print("called create")
         instance = self.get_object()
 
         # If the instance exists, update the profile instead of creating a new one
@@ -38,7 +36,6 @@ class PatientProfileCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIV
         # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
-        print("called perform_create")
         print(serializer)
         serializer.save(user=self.request.user.id)  # Assign the authenticated user
 class GetprofilePatient(APIView):

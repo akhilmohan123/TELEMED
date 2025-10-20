@@ -81,28 +81,3 @@ class GetprofilePatient(APIView):
             raise AuthenticationFailed("User not found")
         except Exception as e:
             return Response({"error": str(e)}, status=500)
-class GetAllDoctors(APIView):
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-    def get(self,request):
-        token=request.headers.get('Authorization')
-        token=token.split(' ')[1]
-        if not token:
-            raise ValueError("Unauthorized token")
-        try:
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-            print("Decoded payload:", payload)  # Print the decoded payload for debugging
-            user = User.objects.get(id=payload['id'])
-            if user:
-                doctor=DoctorModel.objects.all()
-                serializer=GetAllDoctorsSerializers(doctor,many=True)
-                return Response(serializer.data, status=status.HTTP_200_OK)
-        except jwt.ExpiredSignatureError:
-            raise AuthenticationFailed("Token has expired")
-        except jwt.DecodeError:
-            raise AuthenticationFailed("Invalid token")
-        except User.DoesNotExist:
-            raise AuthenticationFailed("User not found")
-        except Exception as e:
-            return Response({"error": str(e)}, status=500)
-
