@@ -1,5 +1,5 @@
 from rest_framework import generics, status
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from rest_framework.response import Response
 from .models import PatientProfile
 from .serializer import PatientProfileSerializer,GetPatientProfileSerializer
@@ -67,3 +67,16 @@ class GetprofilePatient(APIView):
             raise AuthenticationFailed("Invalid token")
         except Exception as e:
             return Response({"error": str(e)}, status=500)
+        
+class Getspeceficpatient(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,patient_id):
+        try:
+            #fetch the seecific patient by id
+            patient=PatientProfile.objects.get(id=patient_id)
+            serializer=GetPatientProfileSerializer(patient)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except PatientProfile.DoesNotExist:
+            return Response({"error":"Patient profile not found"},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:  
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

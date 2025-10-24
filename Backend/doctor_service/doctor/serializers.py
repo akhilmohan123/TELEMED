@@ -37,3 +37,10 @@ class GetAllDoctorsSerializers(serializers.ModelSerializer):
         model=DoctorModel
         fields = ['id', 'speciality', 'license_no', 'organization_name', 'location', 'phone_number', 'experiance', 'available_status', 'image', 'user_email','first_name','last_name']
         
+class GetSpeceficDoctorSerializer(serializers.ModelSerializer):
+     
+     class Meta:
+        model=DoctorModel
+        fields='__all__'
+
+     

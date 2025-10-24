@@ -1,9 +1,9 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
-from .serializers import DoctorCreateSerializer,GetDoctorSerializer
+from .serializers import DoctorCreateSerializer,GetDoctorSerializer,GetSpeceficDoctorSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated,AllowAny
 from .authentication import JWTAuthentication
 from .models import DoctorModel
 from . models import DoctorModel
@@ -111,5 +111,16 @@ class GetAllDoctors(APIView):
 
             return Response(merged_data, status=status.HTTP_200_OK)
 
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetSpeceficDoctor(APIView):
+    permission_classes = [AllowAny]
+    def get(self, request, doctor_id):
+        try:
+            # Fetch the specific doctor by ID
+            doctor = get_object_or_404(DoctorModel, id=doctor_id)
+            serializer = GetSpeceficDoctorSerializer(doctor)
+            return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

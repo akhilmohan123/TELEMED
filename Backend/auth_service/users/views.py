@@ -166,3 +166,14 @@ class PublicUserView(APIView):
         except User.DoesNotExist:
             return Response({"error": "User not found"}, status=404)
         
+
+class Getuserview(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,user_id):
+        try:
+            print("user id is ",user_id)
+            user=User.objects.get(id=user_id)
+            serializer=UserSerializer(user)
+            return Response(serializer.data)
+        except User.DoesNotExist:
+            return Response({"Error":"User not found"},status=404)
