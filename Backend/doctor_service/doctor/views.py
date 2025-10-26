@@ -12,6 +12,7 @@ from rest_framework import status
 from rest_framework.parsers import MultiPartParser, FormParser
 import jwt
 import requests
+import uuid
 class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = DoctorCreateSerializer
     permission_classes = [IsAuthenticated]
@@ -124,3 +125,18 @@ class GetSpeceficDoctor(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+class GetSpeceficDoctorid(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request,user_id):
+        try:
+            user_id=int(user_id)
+            #fetch the specefic doctor by user id 
+            user_id=uuid.UUID(int=user_id)
+            doctor=DoctorModel.objects.get(user_id=user_id)
+            serializer=GetSpeceficDoctorSerializer(doctor)
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        except DoctorModel.DoesNotExist:
+            return Response({"error":"Doctor profile not found"},status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:  
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)

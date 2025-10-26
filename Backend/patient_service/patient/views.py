@@ -7,6 +7,7 @@ from .authentication import JWTAuthentication
 from rest_framework.views import APIView
 from rest_framework.exceptions import AuthenticationFailed
 import jwt
+import uuid
 class PatientProfileCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = PatientProfileSerializer
     permission_classes = [IsAuthenticated]
@@ -80,3 +81,29 @@ class Getspeceficpatient(APIView):
             return Response({"error":"Patient profile not found"},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:  
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+##get the patient details based on the patient id
+
+
+
+class Getspecificpatientuser(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request, user_id):
+        try:
+            # Convert API input to integer, then to UUID
+            user_int = int(user_id)
+            user_uuid = uuid.UUID(int=user_int)
+
+            # Fetch the specific patient
+            patient = PatientProfile.objects.get(user=user_uuid)
+            
+            # Serialize and return
+            serializer = GetPatientProfileSerializer(patient)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
+        except PatientProfile.DoesNotExist:
+            return Response({"error": "Patient profile not found"}, status=status.HTTP_404_NOT_FOUND)
+        except ValueError:
+            return Response({"error": "Invalid user ID"}, status=status.HTTP_400_BAD_REQUEST)

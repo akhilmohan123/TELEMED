@@ -1,0 +1,108 @@
+version: '3.9'
+
+services:
+  # ================= AUTH SERVICE =================
+  auth_service:
+    build: ./auth_service
+    ports:
+      - "8000:8000"
+    environment:
+      - DATABASE_URL=postgresql://postgres:akhilmohanpostgres@123@localhost:5432/auth_db
+    depends_on:
+      - auth_db
+
+  auth_db:
+    image: postgres:15
+    container_name: auth_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=akhilmohanpostgres@123
+      - POSTGRES_DB=auth_db
+    volumes:
+      - auth_data:/var/lib/postgresql/data
+
+
+  # ================= DOCTOR SERVICE =================
+  doctor_service:
+    build: ./doctor_service
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://postgres:akhilmohanpostgres@123@localhost:5432/doctor_service
+    depends_on:
+      - doctor_db
+
+  doctor_db:
+    image: postgres:15
+    container_name: doctor_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=akhilmohanpostgres@123
+      - POSTGRES_DB=doctor_service
+    volumes:
+      - doctor_data:/var/lib/postgresql/data
+
+
+  # ================= PATIENT SERVICE =================
+  patient_service:
+    build: ./patient_service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=postgresql://postgres:akhilmohanpostgres@123@localhost:5432/patient_service
+    depends_on:
+      - patient_db
+
+  patient_db:
+    image: postgres:15
+    container_name: patient_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=akhilmohanpostgres@123
+      - POSTGRES_DB=patient_service
+    volumes:
+      - patient_data:/var/lib/postgresql/data
+
+
+  # ================= APPOINTMENT SERVICE =================
+  appointment_service:
+    build: ./appointment_service
+    ports:
+      - "8003:8003"
+    environment:
+      - DATABASE_URL=postgresql://postgres:akhilmohanpostgres@123@localhost:5432/appointment_service
+    depends_on:
+      - appointment_db
+
+  appointment_db:
+    image: postgres:15
+    container_name: appointment_db
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=akhilmohanpostgres@123
+      - POSTGRES_DB=appointment_service
+    volumes:
+      - appointment_data:/var/lib/postgresql/data
+
+
+  # ================= MEDIA SERVICE =================
+  media_service:
+    build: ./media_service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./media_service/uploads:/app/uploads
+    environment:
+      - STORAGE_PATH=/app/uploads
+    #   Only add DB config if needed
+      - DATABASE_URL=postgresql://postgres:akhilmohanpostgres@123@localhost:5432/hospitalmanagementmain
+    # depends_on:
+    #   - media_db
+
+volumes:
+  auth_data:
+  doctor_data:
+  patient_data:
+  appointment_data:
+  # media_data:
+

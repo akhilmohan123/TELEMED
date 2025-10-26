@@ -3,12 +3,14 @@ from .models import Appointmentmodel,Medicine
 from .utils import get_doctor_details,get_patient_details,get_user_details
 class AppointmentSerializers(serializers.ModelSerializer):
     doctor_name = serializers.SerializerMethodField()
-    doctor = serializers.IntegerField()
+    doctor_id = serializers.IntegerField()
     class Meta:
       model=Appointmentmodel
-      fields=["id","doctor","doctor_name","date","time","note","referrence_no","refer_doctor","status"]
-      read_only_fields=["patient","status"]
+      fields=["id","doctor_id","doctor_name","date","time","note","referrence_no","refer_doctor_id","status"]
+      read_only_fields=["patient_id","status"]
+      print("the class is called ")
     def get_doctor_name(self, obj):
+        print("the doctor name method is called ")
         doctor_data = get_doctor_details(obj.doctor_id)
         if doctor_data and doctor_data.get("user"):
            user_data = doctor_data.get('user')
@@ -16,10 +18,11 @@ class AppointmentSerializers(serializers.ModelSerializer):
               return f"{user_data.get('first_name', '')} {user_data.get('last_name', '')}"
         return "Doctor not found"
     def validate(self,data):
+        print("the  validate is called with data",data)
         date=data.get("date")
         time=data.get("time")
         doctor=data.get("doctor")
-        if Appointmentmodel.objects.filter(date=date,time=time,doctor=doctor).exists():
+        if Appointmentmodel.objects.filter(date=date,time=time,doctor_id=doctor).exists():
             raise serializers.ValidationError("There is an Appointment for specefic date")
 
         return data
@@ -29,7 +32,7 @@ class GetdoctorAppointmentserializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointmentmodel
-        fields = ["id","patient", "date", "time", "note", "doctor_name", "status","patient_name","referrence_no"]
+        fields = ["id","patient_id", "date", "time", "note", "doctor_name", "status","patient_name","referrence_no"]
 
     def get_doctor_name(self, obj):
         doctor_data = get_doctor_details(obj.doctor_id)
@@ -39,7 +42,10 @@ class GetdoctorAppointmentserializer(serializers.ModelSerializer):
               return f"{user_data.get('first_name', '')} {user_data.get('last_name', '')}"
         return "Doctor not found"
     def get_patient_name(self, obj):
+        print("before calling the patient name ")
+        print("the objects are ",obj.patient_id)
         patient_data = get_patient_details(obj.patient_id)
+        print("the patient name is =====",patient_data)
         if patient_data:
             user_data = patient_data.get('user')
             return f"{user_data.get('first_name', '')} {user_data.get('last_name', '')}"
@@ -50,7 +56,7 @@ class GetspeceficSerializer(serializers.ModelSerializer):
     medical_history=serializers.SerializerMethodField()
     class Meta:
         model=Appointmentmodel
-        fields=["id","patient", "date", "time", "note", "doctor_name", "status","patient_name","medical_history","refer_doctor"]
+        fields=["id","patient_id", "date", "time", "note", "doctor_name", "status","patient_name","medical_history","refer_doctor_id"]
     def get_doctor_name(self, obj):
         doctor_data = get_doctor_details(obj.doctor_id)
         if doctor_data:
@@ -87,7 +93,8 @@ class GetMedicineSerializer(serializers.ModelSerializer):
         model=Medicine
         fields=["name","doctor_name","dosage","frequency","duration","additional_notes","date"]
     def get_doctor_name(self, obj):
-        doctor_data = get_doctor_details(obj.doctor_id)
+        print("get doctor data is ====",obj.appointment.doctor_id)
+        doctor_data = get_doctor_details(obj.appointment.doctor_id)
         if doctor_data:
            user_data = doctor_data.get('user')
            if user_data:
@@ -105,7 +112,7 @@ class GetReferAppointmentSerializer(serializers.ModelSerializer):
     special=serializers.SerializerMethodField()
     class Meta:
         model=Appointmentmodel
-        fields=["id","doctor_name","date","time","note","refer_doctor_name","special","refer_doctor"]
+        fields=["id","doctor_name","date","time","note","refer_doctor_name","special","refer_doctor_id"]
     def get_doctor_name(self, obj):
         doctor_data = get_doctor_details(obj.doctor_id)
         if doctor_data:

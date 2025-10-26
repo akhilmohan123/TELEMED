@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from . models import Appointmentmodel,Medicine
-from . utils import get_user_details,get_doctor_details,get_patient_details
+from . utils import get_user_details,get_doctor_details,get_patient_details,get_patient_id_from_user,get_doctor_id_from_user
 import jwt
 from rest_framework.exceptions import AuthenticationFailed
 # Create your views here.
@@ -33,10 +33,15 @@ class Appointmentview(APIView):
         doctor = get_doctor_details(id)
         print("doctor is =======",doctor)
         data=request.data.copy()
-        data['doctor']=doctor['id']
+        data['doctor_id']=doctor['id']
         serializer=self.serializer_class(data=data)     
         if serializer.is_valid():
-             serializer.save(patient=request.user)
+             print("serializer is valid before the save")
+             print("the user id is ====",request.user.id)
+             patient_id=get_patient_id_from_user(request.user.id)
+             print("the patient id is =====",patient_id)
+             
+             serializer.save(patient_id=patient_id)
              print(serializer.data)
              return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -66,15 +71,17 @@ class GetDoctorAppointment(APIView):
     def get(self, request):
 
         try:
-            token = token.split(' ')[1]  # Extract the token part
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-            print("Decoded payload:", payload)  # Debugging
-            user = get_user_details(payload['user_id'])
-
+            print("the view getdoctor appointmentis called ")
+            
+            user = request.user.id
+            print("Authenticated user is ",user)
+            doctor_id=get_doctor_id_from_user(user)
+            print("doctor id is ",doctor_id)
             # Fetch appointments for the doctor
-            appointments = Appointmentmodel.objects.filter(doctor=user)
+            appointments = Appointmentmodel.objects.filter(doctor_id=doctor_id)
+            print("after the appointment printing ")
            
-            print(appointments)
+            print("appointment are",appointments)
             if not appointments.exists():
                 return Response({"message": "No appointments found"}, status=404)
 
@@ -83,12 +90,13 @@ class GetDoctorAppointment(APIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
 
         except jwt.ExpiredSignatureError:
+            print(f"Error expired token: {e}")
             raise AuthenticationFailed("Token has expired")
         except jwt.DecodeError:
+            print(f"Error decoding token: {e}")
             raise AuthenticationFailed("Invalid token")
-        except User.DoesNotExist:
-            raise AuthenticationFailed("User not found")
         except Exception as e:
+            print(f"Error fetching doctor appointments: {e}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 class GetSpeceficPatient(APIView):
     permission_classes = [IsAuthenticated]
@@ -97,6 +105,7 @@ class GetSpeceficPatient(APIView):
         patient=get_object_or_404(Appointmentmodel,id=id)
         
         serializer=GetspeceficSerializer(patient)
+        print("serializer data is =====",serializer.data)
         return Response(serializer.data,status=status.HTTP_200_OK)
 class EditDoctorView(APIView):
     permission_classes = [IsAuthenticated]
@@ -107,11 +116,14 @@ class EditDoctorView(APIView):
             appointment = Appointmentmodel.objects.get(id=id)
             new_status = request.data.get('status')
             new_refer = request.data.get('refer')
-            print(new_refer)
+            print("refer id is -----",new_refer)
             # Update refer doctor if provided
             if new_refer:
-                refer_doctor_instance=DoctorModel.objects.get(id=new_refer)
-                appointment.refer_doctor = refer_doctor_instance
+                print("its a new refer ")
+                refer_doctor_instance=get_doctor_details(new_refer)
+                if refer_doctor_instance:
+                    appointment.refer_doctor_id = new_refer
+                    
            
             # Update appointment status if provided
             if new_status:
@@ -144,12 +156,13 @@ class GetMedicineView(APIView):
     def get(self, request):
         try:
             # Get the patient profile
-            patient = PatientProfile.objects.get(user=request.user)
-        except PatientProfile.DoesNotExist:
+            patient = get_patient_id_from_user(request.user.id)
+            print("patient is =======",patient)
+        except patient.DoesNotExist:
             return Response({"error": "Patient profile not found."}, status=status.HTTP_404_NOT_FOUND)
 
         # Retrieve appointments for the patient
-        appointments = Appointmentmodel.objects.filter(patient=patient.id)
+        appointments = Appointmentmodel.objects.filter(patient_id=patient)
 
         medicine_list = []
     
@@ -175,8 +188,9 @@ class GetSpeceficMedicine(APIView):
 
 class GetReferAppointment(APIView):
     def get(self,request):
-        user=self.request.user
-        appointment=Appointmentmodel.objects.get(patient=user , refer_doctor__isnull=False)      
+        user=self.request.user.id
+        patient_id=get_patient_id_from_user(user)
+        appointment=Appointmentmodel.objects.get(patient_id=patient_id , refer_doctor_id__isnull=False)      
         if appointment:
             serializer=GetReferAppointmentSerializer(appointment)
             if serializer.data:

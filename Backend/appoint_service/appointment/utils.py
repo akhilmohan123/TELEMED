@@ -58,28 +58,66 @@ def get_doctor_details(doctor_id):
 
 def get_patient_details(patient_id):
     try:
-        response=requests.get(f"{PATIENT_SERVICE_URL}/api/patients/{patient_id}/")
+        response=requests.get(f"{PATIENT_SERVICE_URL}/patient/api/get-patient/{patient_id}")
         if response.status_code==200:
             patient_data= response.json()
+            print("patient data is =====",patient_data)
             user_id=patient_data.get('user')
             user_id=user_id.split("-")
+            user_id=user_id[-1]
             user_id=int(user_id)
+            print("user id is ====",user_id)
         else:
+            print("inside the else ")
             patient_data=None
     except Exception as e:
         print(f"Error fetching the patient details: {e}")
     
     try:
-         response=requests.get(f"{USER_SERVICE_URL}/users/api/get-user/{user_id}/")
+         response=requests.get(f"{USER_SERVICE_URL}/users/api/get-user/{user_id}")
          if response.status_code==200:
+              print("the response is successs ")
               user_data=response.json()
               if patient_data is not None:
                 patient_data['user']=user_data
+                print("the patient nameis =====",user_data)
               return patient_data
          else:
+              print
               return None
     except Exception as e:
         print(f"Error fetching the user details: {e}")
     return None
 
 
+
+##get the patient id based on the user id 
+
+def get_patient_id_from_user(user_id):
+    try:
+        print("called the get patient id from user id function with user id =",user_id)
+        response=requests.get(f"{PATIENT_SERVICE_URL}/patient/api/get-user-id/{user_id}/")
+        if response.status_code==200:
+            patient_data=response.json()
+            patient_id=patient_data.get('id')
+            print("patient id from the user id is ===",patient_id)
+            return patient_id
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching the patient id from user id: {e}")
+    return None
+
+
+def get_doctor_id_from_user(user_id):
+    try:
+        response=requests.get(f"{DOCTOR_SERVICE_URL}/doctor/api/get-user-id-doctor/{user_id}/")
+        print(response.json())
+        if response.status_code==200:
+            doctor_id=response.json().get('id')
+            return doctor_id
+        else:
+            return None
+    except Exception as e:
+        print(f"Error fetching the doctor id from the user {e}")
+    return None

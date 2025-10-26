@@ -21,5 +21,5 @@ class PatientProfileSerializer(serializers.ModelSerializer):
 class GetPatientProfileSerializer(serializers.ModelSerializer):
     class Meta:
         model = PatientProfile
-        fields=['user','phone_number','date_of_birth','address','medical_history','additional_information']
+        fields="__all__"
 

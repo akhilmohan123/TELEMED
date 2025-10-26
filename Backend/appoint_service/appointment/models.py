@@ -22,7 +22,7 @@ class Appointmentmodel(models.Model):
             ref_number = create_new_ref_number()
         return ref_number
     def __str__(self):
-        return f"{self.patient} booked {self.doctor} on {self.date} at {self.time}"
+        return f"{self.patient_id} booked {self.doctor_id} on {self.date} at {self.time}"
 class Medicine(models.Model):
     appointment=models.ForeignKey(Appointmentmodel,related_name='medicines',on_delete=models.CASCADE)
     name=models.CharField(max_length=100)
@@ -31,5 +31,5 @@ class Medicine(models.Model):
     duration=models.CharField(max_length=50)
     additional_notes=models.TextField(blank=True,null=True)
     def __str__(self):
-        return f"{self.name}-{self.appointment.patient}"
+        return f"{self.name}-{self.appointment.patient_id}"
 
