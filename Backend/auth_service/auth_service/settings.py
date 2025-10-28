@@ -92,10 +92,15 @@ DATABASES = {
 
 
 AUTH_USER_MODEL='users.User'
-CORS_ORIGIN_ALLOW_ALL=True
-CORS_ALLOW_CREDENTIALS=True
+
+
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Allow React frontend running on this origin
+]
+CORS_ALLOW_CREDENTIALS=True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
 REST_FRAMEWORK = {

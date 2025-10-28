@@ -1,18 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import Header from './Header';
-import axiosconfig from '../axios/axios';
+import axiosconfig, { doctor_api } from '../axios/axios';
 import { MDBCol, MDBContainer, MDBRow, MDBCard, MDBCardBody, MDBCardImage, MDBBtn, MDBTypography, MDBIcon } from 'mdb-react-ui-kit';
 
 function Content() {
   const [doctor, setDoctor] = useState([]);
-  const token = localStorage.getItem('token');
+  
   const baseURL = "http://127.0.0.1:8000/";
 
   useEffect(() => {
-    axiosconfig.get('getalldoctors', {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
+    doctor_api.get('getalldoctors/', {
+      withCredentials:true
     }).then((res) => {
       console.log(res)
       setDoctor(res.data);

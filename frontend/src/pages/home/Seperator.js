@@ -14,9 +14,9 @@ function Seperator() {
     }else{
         navigate("/user")
     }
-    if(!token){
-        navigate("/login")
-    }
+    // if(!token){
+    //     navigate("/login")
+    // }
    },[token])
   return (
     <>

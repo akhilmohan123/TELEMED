@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } from 'mdb-react-ui-kit';
-import axios from '../axios/axios';
+import axios, { auth_api } from '../axios/axios';
 import axiosconfig from '../axios/axios';
 import { useNavigate } from 'react-router-dom';
 
@@ -26,7 +26,7 @@ function Signup() {
         };
         Setdata({Username:"",First_Name:"",Last_Name:"",Email:"",Password:"",role:null})
         try {
-            await axiosconfig.post("/register",userData,{
+            await auth_api.post("/register",userData,{
                 headers:{
                     'Content-Type':'application/json',
                 }

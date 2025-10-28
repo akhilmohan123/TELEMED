@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosconfig from '../axios/axios';
+import axiosconfig, { auth_api } from '../axios/axios';
 
 function Add() {
   const [medicalHistory, setMedicalHistory] = useState('');
@@ -12,15 +12,12 @@ function Add() {
     additional_information: ''
   });
   const [user, setUser] = useState(null);
-  const token = localStorage.getItem("token");
 
   useEffect(() => {
     async function getProfile() {
       try {
-        const res = await axiosconfig.get("getprofile", {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+        const res = await auth_api.get("getprofile", {
+         withCredentials:true
         });
         if (res.data) {
           setUser(res.data);
@@ -57,11 +54,8 @@ function Add() {
       medical_history: medicalHistory
     };
     try {
-      await axiosconfig.post("/addprofile", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        }
+      await auth_api.post("/addprofile", formData, {
+        withCredentials:true
       });
       alert('Profile updated successfully!');
     } catch (error) {

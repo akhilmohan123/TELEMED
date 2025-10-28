@@ -1,4 +1,4 @@
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from . serializers import PublicSerializer, RegisterSerializer,LoginSerializer,UserSerializer
@@ -38,15 +38,15 @@ class LoginView(APIView):
          key='access_token',
          value=access_token,
          httponly=True,
-         samesite='Strict',  # prevents CSRF
-         secure=False        # True if using HTTPS
+         samesite='None',  # prevents CSRF
+         secure=True        # True if using HTTPS
         )
         response.set_cookie(
          key='refresh_token',
          value=refresh_token,
          httponly=True,
-         samesite='Strict',  # prevents CSRF
-         secure=False        # True if using HTTPS
+         samesite='None',  # prevents CSRF
+         secure=True        # True if using HTTPS
         )
         response.data={
             'message':'Login successfully',
@@ -54,24 +54,17 @@ class LoginView(APIView):
         }
         return response
 class UserView(APIView):
+    permission_classes=[IsAuthenticated]
     def get(self, request):
-        token = request.COOKIES.get('jwt')
-       
-        print("Received token:", token)
+
+     
         
         # Print the token for debugging
-        
-        if not token:
-            raise AuthenticationFailed("Unauthenticated: Token not found")
 
         try: 
             # Decode the JWT token
-            payload = jwt.decode(token, 'secret', algorithms=['HS256'])
-            print("Decoded payload:", payload)  # Print the decoded payload for debugging
-
-            # Retrieve user based on the payload data
-            user = User.objects.get(id=payload['id'])  # Ensure 'id' is the correct field
-            
+        
+            user=request.user
             # Serialize the user data
             serializer = UserSerializer(user)
             

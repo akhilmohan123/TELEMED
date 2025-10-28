@@ -10,7 +10,7 @@ import {
   MDBNavbarLink,
   MDBCollapse
 } from 'mdb-react-ui-kit';
-import axiosconfig from '../axios/axios';
+import axiosconfig, { auth_api } from '../axios/axios';
 import { useNavigate } from 'react-router-dom';
 
 export default function Navbar() {
@@ -25,7 +25,11 @@ export default function Navbar() {
       logoutTimer = setTimeout(async () => {
     localStorage.removeItem('token');
     localStorage.removeItem('role');
-    await axiosconfig.post("/logout");
+    await auth_api.post("/logout",
+      {
+        withCredentials:true
+      }
+    );
     navigate("/login");
   }, 300);
   }

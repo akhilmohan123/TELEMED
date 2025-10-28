@@ -5,6 +5,8 @@ from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
 with open("C:/Users/user/Desktop/akhil/private.pem", "r") as f:
     private_key = f.read()
+with open("C:/Users/user/Desktop/akhil/public.pem", "r") as f:
+    public_key = f.read()
 User = get_user_model()
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -16,20 +18,27 @@ class JWTAuthentication(authentication.BaseAuthentication):
         print("JWTAuthentication called")
 
         try:
+            print(request.COOKIES)
             token = request.COOKIES.get('access_token')
             print("Extracted token:", token)
+            print("private key is there ====",private_key)
             if not token:
                 return None
-            payload = jwt.decode(token, private_key, algorithms=["RS256"])
-           
+            print("decoding started")
+            payload = jwt.decode(token, public_key, algorithms=["RS256"])
+            
             user = User.objects.get(id=payload['id'])
-            print(user)
+            print("user is ======",user)
             return (user, token)
-        except jwt.ExpiredSignatureError:
+        except jwt.ExpiredSignatureError as e:
+            print("1",e)
             return None
-        except jwt.DecodeError:
+        except jwt.DecodeError as e:
+            print("2",e)
             return None
         except Exception as e:
+            print("3",e)
             return None
-        except User.DoesNotExist:
+        except User.DoesNotExist as e:
+            print("4",e)
             return None
