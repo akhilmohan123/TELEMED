@@ -71,11 +71,18 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "appoint_service.wsgi.application"
-CORS_ORIGIN_ALLOW_ALL=True
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # Allow React frontend running on this origin
+]
 CORS_ALLOW_CREDENTIALS=True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Allow React frontend running on this origin
 ]
+
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [

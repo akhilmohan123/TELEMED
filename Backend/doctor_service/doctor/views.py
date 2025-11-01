@@ -116,8 +116,10 @@ class GetAllDoctors(APIView):
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetSpeceficDoctor(APIView):
+    print("get specefic doctor as a called ")
     permission_classes = [AllowAny]
     def get(self, request, doctor_id):
+
         try:
             # Fetch the specific doctor by ID
             doctor = get_object_or_404(DoctorModel, id=doctor_id)
@@ -140,3 +142,22 @@ class GetSpeceficDoctorid(APIView):
             return Response({"error":"Doctor profile not found"},status=status.HTTP_404_NOT_FOUND)
         except Exception as e:  
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
+
+##for changing the status of doctor 
+
+class ChangeDoctorstatus(APIView):
+    permission_classes=[AllowAny]
+    def post(self,request,id):
+        try:
+            print("change status is called ")
+            doctor_data=DoctorModel.objects.get(id=id)
+            doctor_data.available_status="busy"
+            doctor_data.save()
+            print("doctor status is saved ====")
+            return Response(True,status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"There is a exception while updating the status {e}")
+            return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+

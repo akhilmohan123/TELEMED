@@ -121,3 +121,20 @@ def get_doctor_id_from_user(user_id):
     except Exception as e:
         print(f"Error fetching the doctor id from the user {e}")
     return None
+
+
+##api call for updating the doctor status from avilable to booked 
+
+def change_doctor_status(id):
+    try:
+        response=requests.post(f"{DOCTOR_SERVICE_URL}/doctor/api/change-doctor-status/{id}/")
+        if response.status_code==200:
+            print("it has the status 200 doctor api status change")
+            print(response.data)
+            return True
+        else:
+            print("it has the status code not 200")
+            return False
+    except Exception as e:
+        print(f"Error in fetching the doctor status api change {e}")
+        return False

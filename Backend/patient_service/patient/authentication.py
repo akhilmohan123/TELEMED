@@ -27,6 +27,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         print("JWTAuthentication called")
 
         try:
+            print("cookies are ",request.COOKIES)
             token = request.COOKIES.get('access_token')
             print("Extracted token:", token)
             if not token:

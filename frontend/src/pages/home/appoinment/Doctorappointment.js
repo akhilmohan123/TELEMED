@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Alert, Form, Button, Container, Row, Col } from 'react-bootstrap';
-import axiosconfig from '../../axios/axios';
+import axiosconfig, { appointment_api } from '../../axios/axios';
 import '../appoinment/Doctorappointment.css';
 
 function Doctorappointment() {
@@ -9,7 +9,6 @@ function Doctorappointment() {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
   const { id } = useParams();
-  const token = localStorage.getItem("token");
   const backgroundImage = '/img/services.jpg';
 
   const handleChange = (e) => {
@@ -20,11 +19,10 @@ function Doctorappointment() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axiosconfig.post(`/createdoctor/${id}`, data, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+      const response = await appointment_api.post(`/createdoctor/${id}`, data, {
+        withCredentials:true
       });
+      console.log(response)
       setSuccess(true);
       setError('');
     } catch (err) {

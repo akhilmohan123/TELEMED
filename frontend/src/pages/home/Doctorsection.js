@@ -9,7 +9,7 @@ function Content() {
   const baseURL = "http://127.0.0.1:8000/";
 
   useEffect(() => {
-    doctor_api.get('getalldoctors/', {
+    doctor_api.get('/get-all-doctors', {
       withCredentials:true
     }).then((res) => {
       console.log(res)

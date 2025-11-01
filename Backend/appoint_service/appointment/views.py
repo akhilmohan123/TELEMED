@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404
 from rest_framework.response import Response
 from rest_framework import status
 from . models import Appointmentmodel,Medicine
-from . utils import get_user_details,get_doctor_details,get_patient_details,get_patient_id_from_user,get_doctor_id_from_user
+from . utils import get_user_details,get_doctor_details,get_patient_details,get_patient_id_from_user,get_doctor_id_from_user,change_doctor_status
 import jwt
 from rest_framework.exceptions import AuthenticationFailed
 # Create your views here.
@@ -32,19 +32,28 @@ class Appointmentview(APIView):
     def post(self,request,id):
         doctor = get_doctor_details(id)
         print("doctor is =======",doctor)
-        data=request.data.copy()
-        data['doctor_id']=doctor['id']
-        serializer=self.serializer_class(data=data)     
-        if serializer.is_valid():
-             print("serializer is valid before the save")
-             print("the user id is ====",request.user.id)
-             patient_id=get_patient_id_from_user(request.user.id)
-             print("the patient id is =====",patient_id)
-             
-             serializer.save(patient_id=patient_id)
-             print(serializer.data)
-             return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        if doctor['available_status'] in ('available','Available'):
+
+            data=request.data.copy()
+            data['doctor_id']=doctor['id']
+            serializer=self.serializer_class(data=data)
+            doctor_status=change_doctor_status(doctor['id'])
+            print("doctor status is =========",doctor_status)     
+            if serializer.is_valid() and doctor_status:
+                print("serializer is valid before the save")
+                print("the user id is ====",request.user.id)
+                patient_id=get_patient_id_from_user(request.user.id)
+                print("the patient id is =====",patient_id)
+                serializer.save(patient_id=patient_id)
+                print(serializer.data)
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                print("serializer is not valid")
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            print("in else condition")
+            return Response({"message": "Doctor is not available"}, status=status.HTTP_400_BAD_REQUEST)
+
     def update(self,request,*args,**kwargs):
         instance=self.get_object()
         serializer=self.serializer_class(instance=instance,data=request.data)

@@ -6,6 +6,12 @@ def get_image_upload_path(instance, filename):
     # Define the path format
     return os.path.join('image', f'{user_id}_{filename}')
 class DoctorModel(models.Model):
+    STATUS_CHOICES = [
+        ("available", "Available"),
+        ("busy", "Busy"),
+        ("offline", "Offline"),
+        ("in_consultation", "In Consultation"),
+       ]
     user_id = models.UUIDField()
     speciality = models.TextField(default="nill", blank=True, null=True)
     license_no = models.IntegerField(blank=True, null=True)
@@ -13,7 +19,7 @@ class DoctorModel(models.Model):
     location = models.TextField(default="nill", blank=True, null=True)
     phone_number = models.IntegerField(blank=True, null=True)
     experiance = models.IntegerField(default=0, null=True)
-    available_status=models.TextField(null=True)
+    available_status=models.CharField(max_length=20, choices=STATUS_CHOICES, default="available")
     image=models.ImageField(upload_to='image/',default='default_images/default_avatar.png')
 
     unique_together=("doctor","date","time")

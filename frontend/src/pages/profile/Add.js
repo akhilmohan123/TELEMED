@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosconfig, { auth_api } from '../axios/axios';
+import axiosconfig, { auth_api, patient_api } from '../axios/axios';
 
 function Add() {
   const [medicalHistory, setMedicalHistory] = useState('');
@@ -16,7 +16,7 @@ function Add() {
   useEffect(() => {
     async function getProfile() {
       try {
-        const res = await auth_api.get("getprofile", {
+        const res = await patient_api.get("getprofile", {
          withCredentials:true
         });
         if (res.data) {
@@ -34,7 +34,7 @@ function Add() {
       }
     }
     getProfile();
-  }, [token]);
+  }, []);
 
   const handleMedicalHistoryChange = (event) => {
     const selectedOption = event.target.value;
@@ -54,7 +54,7 @@ function Add() {
       medical_history: medicalHistory
     };
     try {
-      await auth_api.post("/addprofile", formData, {
+      await patient_api.post("/addprofile", formData, {
         withCredentials:true
       });
       alert('Profile updated successfully!');
