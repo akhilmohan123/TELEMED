@@ -1,24 +1,27 @@
 import React, { useEffect, useState } from 'react'
 import Navbar from '../Navbar'
-import axiosconfig from '../../axios/axios'
+import axiosconfig, { appointment_api } from '../../axios/axios'
 import { useNavigate } from 'react-router-dom'
 
 function Appointmentdetails() {
     const [data,Setdata]=useState()
-    const token=localStorage.getItem("token")
+    
     const navigate=useNavigate()
-    useEffect(()=>{
-        axiosconfig.get("/appointments",{
-            headers:{
-                Authorization:`Bearer ${token}`
-            }
+    useEffect( ()=>{
+        async function getappointmentDetails()
+    {
+         await appointment_api.get("/appointments",{
+            withCredentials:true
         }).then((res)=>{
             console.log(res)
             Setdata(res.data)
         })
-    },[token])
+    }
+       getappointmentDetails()
+    },[])
+  
     function handleremove(id){
-      axiosconfig.delete(`appointmentdelete/${id}`).then(res=>{
+      appointment_api.delete(`appointmentdelete/${id}`).then(res=>{
         Setdata(prevData => prevData.filter(appointment => appointment.id !== id))
       })
     

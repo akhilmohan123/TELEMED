@@ -19,20 +19,24 @@ class Appointmentview(APIView):
         user=self.request.user.id
         print("user id is ====",user)
         user_data=get_user_details(user)
+        patient=get_patient_id_from_user(user)
+        doctor=get_doctor_id_from_user(user)
         print("before the user_Data")
         print(user_data['is_staff'])
         if user_data['is_staff']:
             appointments=Appointmentmodel.objects.all()
         elif user_data['role']==2:
-            appointments=Appointmentmodel.objects.filter(doctor_id=user)
+            appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
         elif user_data['role']==1:
-            appointments=Appointmentmodel.objects.filter(patient_id=user)
+            print("the role is 1 and patient id is ",patient)
+            appointments=Appointmentmodel.objects.filter(patient_id=patient)
         serializer=self.serializer_class(appointments,many=True)
         return Response(serializer.data,status=status.HTTP_200_OK)
     def post(self,request,id):
         doctor = get_doctor_details(id)
         print("doctor is =======",doctor)
         if doctor['available_status'] in ('available','Available'):
+            print("doctor status is available")
 
             data=request.data.copy()
             data['doctor_id']=doctor['id']

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import axiosconfig from '../../axios/axios'
+import axiosconfig, { doctor_api } from '../../axios/axios'
 import './doctor.css'
 import Navbar from '../Navbar'
 function DoctorProfile() {
@@ -10,10 +10,8 @@ function DoctorProfile() {
     const token=localStorage.getItem("token")
     const baseURL="http://127.0.0.1:8000/"
     useEffect(()=>{
-    axiosconfig.get("getdoctor",{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
+    doctor_api.get("get-doctor",{
+       withCredentials:true
     }).then((res)=>{
         console.log(res)
         Setprofilepic(res.data.image)
@@ -78,11 +76,11 @@ if (userdata.image) {
     formData.append('image', userdata.image);
 }
 console.log(formData)
-     axiosconfig.post("/createdoctor",formData,{
+     doctor_api.post("/profile-create",formData,{
         headers:{
-            'Content-Type':'multipart/form-data',
-            Authorization:`Bearer ${token}`
-        }
+            'Content-Type':'multipart/form-data'
+        },
+        withCredentials:true
      }).then((res)=>{
         if(res){
             
@@ -191,10 +189,10 @@ console.log(formData)
                                                 onChange={handlestatus}
                                             >
                                                 <option value="">Select availability</option>
-                                                <option value="Available">Available</option>
-                                                <option value="Busy">Busy</option>
-                                                <option value="Unavailable">Unavailable</option>
-                                                <option value="onleave">On Leave</option>
+                                                <option value="available">Available</option>
+                                                <option value="busy">Busy</option>
+                                                <option value="offline">Offline</option>
+                                                <option value="in_consultation">In Consultation</option>
                                             </select>
                             </div>
                            

@@ -130,7 +130,6 @@ def change_doctor_status(id):
         response=requests.post(f"{DOCTOR_SERVICE_URL}/doctor/api/change-doctor-status/{id}/")
         if response.status_code==200:
             print("it has the status 200 doctor api status change")
-            print(response.data)
             return True
         else:
             print("it has the status code not 200")

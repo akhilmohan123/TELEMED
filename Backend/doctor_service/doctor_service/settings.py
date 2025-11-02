@@ -35,6 +35,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # Application definition
 
 INSTALLED_APPS = [
+       "corsheaders",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -44,7 +45,7 @@ INSTALLED_APPS = [
     "doctor",
     'rest_framework',
     'rest_framework.authtoken',
-    "corsheaders"
+ 
 ]
 
 MIDDLEWARE = [
@@ -77,11 +78,20 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "doctor_service.wsgi.application"
 
-CORS_ORIGIN_ALLOW_ALL=True
-CORS_ALLOW_CREDENTIALS=True
 CORS_ALLOWED_ORIGINS = [
     'http://localhost:3000',  # Allow React frontend running on this origin
 ]
+CORS_ALLOW_CREDENTIALS=True
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:3000",
+]
+
+
+SESSION_COOKIE_SAMESITE = "Lax"
+CSRF_COOKIE_SAMESITE = "Lax"
+SESSION_COOKIE_SECURE = False
+CSRF_COOKIE_SECURE = False
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
