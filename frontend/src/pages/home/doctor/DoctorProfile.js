@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axiosconfig, { doctor_api } from '../../axios/axios'
 import './doctor.css'
 import Navbar from '../Navbar'
+import {toast} from 'react-toastify'
 function DoctorProfile() {
     const [user,Setuser]=useState({organization_name:"",location:"",phonenumber:null,speciality:"",licensenumber:null,experiance:null})
     const[availablity,Setavailability]=useState()
@@ -84,7 +85,7 @@ console.log(formData)
      }).then((res)=>{
         if(res){
             
-            alert("Profile Updated")
+            toast("Profile Updated")
 
         }
      })

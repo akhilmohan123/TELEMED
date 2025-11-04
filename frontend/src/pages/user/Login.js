@@ -66,7 +66,6 @@ function Login() {
       console.log(res);
       localStorage.setItem("role", res.data.user.role);
       if (res.status == 200) {
-        alert(23)
         navigate("/home");
       }
     } catch (error) {

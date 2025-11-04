@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosconfig, { auth_api, patient_api } from '../axios/axios';
-
+import {toast} from 'react' 
 function Add() {
   const [medicalHistory, setMedicalHistory] = useState('');
   const [showOtherField, setShowOtherField] = useState(false);
@@ -57,10 +57,10 @@ function Add() {
       await patient_api.post("/addprofile", formData, {
         withCredentials:true
       });
-      alert('Profile updated successfully!');
+      toast("Profile updated successfully!")
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert('Failed to update profile. Please try again.');
+      toast.error('Failed to update profile. Please try again.');
     }
   };
 

@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import axiosconfig, { appointment_api, media_api } from '../../axios/axios';
 import Navbar from '../Navbar';
-
+import {toast} from 'react-toastify'
 function MedicineDetails({id}) {
     const [formData, setFormData] = useState({
        appointment:id,
@@ -45,12 +45,12 @@ function MedicineDetails({id}) {
         })
             .then((response) => {
                 console.log('Form submitted successfully:', response.data);
-                alert("added ")
+                toast("added ")
             
             })
             .catch((error) => {
                 console.error('There was an error submitting the form!', error);
-                alert("there is a error")
+                toast.error("Something went wrong please try again after sometime!")
             });
     };
 
