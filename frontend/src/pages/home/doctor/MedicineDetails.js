@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import axiosconfig from '../../axios/axios';
+import axiosconfig, { appointment_api, media_api } from '../../axios/axios';
 import Navbar from '../Navbar';
 
 function MedicineDetails({id}) {
@@ -37,14 +37,11 @@ function MedicineDetails({id}) {
     };
 
     // Handle form submission
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         console.log(formData)
-        axiosconfig.post('/add-medicine', formData,{
-            headers:{
-                Authorization:`Bearer ${token}`,
-                'Content-Type':'application/json',
-            }
+        await appointment_api.post('/add-medicine', formData,{
+           withCredentials:true
         })
             .then((response) => {
                 console.log('Form submitted successfully:', response.data);

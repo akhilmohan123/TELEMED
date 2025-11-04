@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import axiosconfig from '../../axios/axios';
+import axiosconfig, { appointment_api, doctor_api } from '../../axios/axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
 
@@ -8,10 +8,12 @@ function AppointmentDoctor() {
     const [data, Setdata] = useState([]);
   
     const navigate = useNavigate();
-    const token = localStorage.getItem("token");
+   
 
     useEffect(() => {
-        axiosconfig.get("getdoctor-appointments", { headers: { Authorization: `Bearer ${token}` } })
+      async function getDoctorappointment()
+      {
+           await appointment_api.get("/getdoctor-appointments", { withCredentials:true})
             .then(async(res) => {
                 
                 Setdata(res.data);
@@ -24,14 +26,16 @@ function AppointmentDoctor() {
                     Setdata([]); // Ensure data is an empty array if not found
                 }
             });
-    }, [token]);
+      }
+      getDoctorappointment()
+    }, []);
 
     function handlepatient(id,ref) {
         navigate(`/patient-details/${id}/${ref}`);
     }
 
     function handleremove(id) {
-        axiosconfig.delete(`appointmentdelete/${id}`)
+        appointment_api.delete(`appointmentdelete/${id}`)
             .then(() => {
                 Setdata(prevData => prevData.filter(appointment => appointment.id !== id));
             })

@@ -53,7 +53,7 @@ useEffect(()=>{
   function handlejoin(){
    
    Setflag(true)
-   var endpoint = `ws://127.0.0.1:8000/ws/chat/${roomId}/`;
+   var endpoint = `ws://127.0.0.1:8004/ws/chat/${roomId}/`;
    webSocket.current=new WebSocket(endpoint);
    webSocket.current.addEventListener('open',async(e)=>{
     console.log("Connection opened !")
@@ -141,7 +141,7 @@ useEffect(()=>{
      })
   }
   function createVideo(peerUsername){
-    var videoContainer = document.querySelector("#video-container");
+    var videoContainer = document.querySelector("#main-video-wrapper");
     var remoteVideo = document.createElement('video');
     remoteVideo.id = peerUsername + '-video';
     remoteVideo.className = 'remote-video';  // Add this line for CSS class
@@ -267,9 +267,10 @@ useEffect(()=>{
     {/* Video call section */}
     <div className={role == 2 ? "col-md-9" : "col-md-12"} >
       <div id="video-container" className="video-section">
-        <div className="video-wrapper">
-          <video ref={localVideoref} id="local-video" className="video" autoPlay playsInline></video>
-        </div>
+  <div className="video-wrapper" id="main-video-wrapper">
+    {/* remote videos will be added here dynamically */}
+    <video ref={localVideoref} id="local-video" autoPlay playsInline></video>
+  </div>
         <div className="control-buttons">
           <button id="btn-toggle-audio" onClick={toggleAudio} className='btn btn-danger' >
             Audio Mute

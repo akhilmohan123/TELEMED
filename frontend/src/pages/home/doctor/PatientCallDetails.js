@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import axiosconfig from '../../axios/axios';
+import axiosconfig, { appointment_api, doctor_api } from '../../axios/axios';
 import  './PatientCallDetails.css'
 
 function PatientCallDetails() {
@@ -9,53 +9,52 @@ function PatientCallDetails() {
     const [value,Setvalue] =useState()
     const [refer,Setrefer]=useState()
     const { id,ref } = useParams();
-    const token = localStorage.getItem("token");
     const navigate=useNavigate()
     useEffect(() => {
-        axiosconfig.get(`/getspecefic/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+       async function getSpecefic()
+       {
+         appointment_api.get(`/getspecefic/${id}`, {
+            withCredentials:true
         }).then(res => {
     
             setData(res.data);
             Setvalue(res.data.status)
             Setrefer(res.data.refer_doctor)
         });
-    }, [token, id]);
+       }
+       getSpecefic()
+    }, [ id]);
 
     useEffect(() => {
-        axiosconfig.get('getalldoctors', {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+        async function getAlldoctors()
+        {
+            doctor_api.get('/get-all-doctors', {
+            withCredentials:true
         }).then((res) => {
             
             setDoctors(res.data);
             
         });
-    }, [token]);
-    function handleoptions(e){
+        }
+        getAlldoctors()
+    }, []);
+    async function handleoptions(e){
         const options=e.target.value
         Setvalue(options)
         const data={status:options}
       
-        axiosconfig.put(`/edit-patient/${id}`,data,{
-            headers:{  
-                Authorization:`Bearer ${token}`
-            }
+         appointment_api.put(`/edit-patient/${id}`,data,{
+            withCredentials:true
         })
 
     }
-   function handlerefer(e){
+   async function handlerefer(e){
     const refervalue=e.target.value
     Setrefer(refervalue)
     const data={refer:refervalue}
 
-    axiosconfig.put(`/edit-patient/${id}`,data,{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
+    appointment_api.put(`/edit-patient/${id}`,data,{
+        withCredentials:true
     })
    }
    function handlecall(){
