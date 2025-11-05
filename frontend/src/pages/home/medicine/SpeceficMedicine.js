@@ -4,24 +4,29 @@ import { useParams } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min'; // Import Bootstrap's JavaScript
 import $ from 'jquery'; // Import jQuery
+import { appointment_api } from '../../axios/axios';
+import { toast } from 'react-toastify';
 function SpeceficMedicine() {
     const[data,Setdata]=useState()
     const[error,Seterror]=useState()
     const {id}=useParams()
     const token=localStorage.getItem('token')
     useEffect(()=>{
-     axiosconfig.get(`/specefic-medicine/${id}`,{
-        headers:{
-            Authorization:`Bearer ${token}`
-        }
+     getSpeceficmedicine()
+    },[])
+
+    async function getSpeceficmedicine()
+    {
+      await appointment_api.get(`/specefic-medicine/${id}`,{
+        withCredentials:true
      }).then((res)=>{
         Setdata(res.data)
      }).catch((err)=>{
         Seterror(err)
      })
-    },[])
+    }
     if(error){
-        <center>Error While Loading Data</center>
+        toast.error("Something went wrong please try again after sometime!")
     }
   return (
     <div>

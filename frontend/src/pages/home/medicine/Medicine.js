@@ -4,7 +4,8 @@ import { Container, Row, Col, Card, Modal, Button, Badge } from 'react-bootstrap
 import { FaPills, FaCalendarAlt, FaClock, FaFileDownload } from 'react-icons/fa';
 import html2pdf from 'html2pdf.js';
 import Navbar from '../Navbar';
-
+import {appointment_api} from '../../axios/axios'
+import {toast} from 'react-toastify'
 function Medicine() {
   const token = localStorage.getItem("token");
   const [medicines, setMedicines] = useState([]);
@@ -14,14 +15,13 @@ function Medicine() {
   useEffect(() => {
     const getMedicine = async () => {
       try {
-        const res = await axiosconfig.get('get-medicines', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+        const res = await appointment_api.get('get-medicines', {
+         withCredentials:true
         });
         setMedicines(res.data);
       } catch (error) {
         console.error("Error fetching medicines:", error);
+        toast.error("Something went wrong please try again after sometime!")
       }
     };
     getMedicine();

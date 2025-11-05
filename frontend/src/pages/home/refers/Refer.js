@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Card, Button, Alert } from 'react-bootstrap';
 import { PersonFill, ClockFill, CalendarFill } from 'react-bootstrap-icons';
-import axiosconfig from '../../axios/axios';
+import axiosconfig, { appointment_api } from '../../axios/axios';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../Navbar';
 
@@ -11,17 +11,20 @@ const Refer = () => {
   const navigate=useNavigate()
   const token=localStorage.getItem('token')
   useEffect(()=>{
-    axiosconfig.get("/get-refer-appointments",{
-      headers:{
-          Authorization:`Bearer ${token}`
-      }
+   getReferappointment()
+  },[])
+
+  async function getReferappointment()
+  {
+     await appointment_api.get("/get-refer-appointments",{
+      withCredentials:true
   }).then((res)=>{
       console.log(res)
       Setdata(res.data)
   }).catch((err)=>{
     setError(err)
   })
-  },[])
+  }
   function handleclick(id){
    navigate(`/doctor-appointment/${id}`)
   }

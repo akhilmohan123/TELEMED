@@ -9,13 +9,18 @@ function Content() {
   const baseURL = "http://127.0.0.1:8000/";
 
   useEffect(() => {
-    doctor_api.get('/get-all-doctors', {
+  getAlldoctors()
+  }, []);
+
+  async function getAlldoctors()
+  {
+      await doctor_api.get('/get-all-doctors', {
       withCredentials:true
     }).then((res) => {
       console.log(res)
       setDoctor(res.data);
     });
-  }, []);
+  }
 
   return (
     <div className="bg-gray-100 min-h-screen">

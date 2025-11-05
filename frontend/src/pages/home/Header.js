@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import "./homecss/header.css";
 
 function Header() {
-  const token = localStorage.getItem("token");
+
   let slideIndex = 1;  // Initialize slideIndex
 
   function plusSlides(n) {
@@ -42,7 +42,7 @@ function Header() {
 
   useEffect(() => {
     showSlides(slideIndex);  // Show the first slide on mount
-  }, [token]);
+  }, []);
 
   return (
     <div>
