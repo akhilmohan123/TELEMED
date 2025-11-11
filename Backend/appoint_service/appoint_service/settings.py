@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
+import os
+load_dotenv()
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -95,17 +99,33 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':"appointment_service",
-        'USER':'postgres',
-        'PASSWORD':'akhilmohanpostgres@123',
-        'HOST':'localhost',
-        'PORT':'5432',
+print("Environemnt is ===", ENVIRONMENT)
+if ENVIRONMENT == 'production':
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    url = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port,
+            'OPTIONS': dict(parse_qsl(url.query)),
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME':"appointment_service",
+            'USER':'postgres',
+            'PASSWORD':'akhilmohanpostgres@123',
+            'HOST':'localhost',
+            'PORT':'5432',
+        }
+    }
 
 
 # Password validation

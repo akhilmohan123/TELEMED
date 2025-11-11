@@ -12,6 +12,13 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
+import os
+load_dotenv()
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = Path(__file__).resolve().parent.parent
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -81,16 +88,33 @@ WSGI_APPLICATION = 'media_service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME':"hospitalmanagementmain",
-        'USER':'postgres',
-        'PASSWORD':'akhilmohanpostgres@123',
-        'HOST':'localhost',
-        'PORT':'5432',
+if ENVIRONMENT == 'production':
+    DATABASE_URL = os.getenv('DATABASE_URL')
+    url = urlparse(DATABASE_URL)
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port,
+            'OPTIONS': dict(parse_qsl(url.query)),
+        }
     }
-}
+
+else:
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME':"hospitalmanagementmain",
+            'USER':'postgres',
+            'PASSWORD':'akhilmohanpostgres@123',
+            'HOST':'localhost',
+            'PORT':'5432',
+         }
+        }
 
 CORS_ORIGIN_ALLOW_ALL=True
 CORS_ALLOW_CREDENTIALS=True

@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from rest_framework.permissions import AllowAny,IsAuthenticated
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -9,6 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from . token_generation import generate_tokens
 import jwt,datetime
+from django.db import connection
 from django.core.mail import send_mail
 from django.conf import settings
 class RegistrationView(APIView):
@@ -170,3 +172,11 @@ class Getuserview(APIView):
             return Response(serializer.data)
         except User.DoesNotExist:
             return Response({"Error":"User not found"},status=404)
+class Checkschemaview(APIView):
+    permission_classes=[AllowAny]
+    def get(self,request):
+        with connection.cursor() as cursor:
+             cursor.execute("SHOW search_path;")
+             schema = cursor.fetchone()[0]
+             print("Current schema is ",schema)
+    
