@@ -1,0 +1,70 @@
+version: '3.9'
+
+services:
+  # ================= AUTH SERVICE =================
+  auth_service:
+    build: ./auth_service
+    container_name: auth_service
+    ports:
+      - "8000:8000"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}   # Neon Postgres URL
+    secrets:
+      - doctor_private_key
+      - doctor_public_key
+    restart: always
+
+  # ================= DOCTOR SERVICE =================
+  doctor_service:
+    build: ./doctor_service
+    container_name: doctor_service
+    ports:
+      - "8001:8001"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}
+    volumes:
+      - ./doctor_service/media:/app/media    # Neon Postgres URL
+    secrets:
+      - doctor_private_key
+      - doctor_public_key
+    restart: always
+
+  # ================= PATIENT SERVICE =================
+  patient_service:
+    build: ./patient_service
+    container_name: patient_service
+    ports:
+      - "8002:8002"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}   # Neon Postgres URL
+    restart: always
+
+  # ================= APPOINTMENT SERVICE =================
+  appointment_service:
+    build: ./appointment_service
+    container_name: appointment_service
+    ports:
+      - "8003:8003"
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=${DATABASE_URL}   # Neon Postgres URL
+    restart: always
+
+  # ================= MEDIA SERVICE =================
+  media_service:
+    build: ./media_service
+    container_name: media_service
+    ports:
+      - "8004:8004"
+    volumes:
+      - ./media_service/uploads:/app/uploads
+    environment:
+      - ENVIRONMENT=production
+      - STORAGE_PATH=/app/uploads
+      - DATABASE_URL=${DATABASE_URL}   # If it connects to DB
+    restart: always
+
+# No volumes for Postgres needed in production (Neon handles storage)

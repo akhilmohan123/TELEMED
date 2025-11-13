@@ -6,7 +6,24 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from .models import User
-with open("C:/Users/user/Desktop/akhil/private.pem", "r") as f:
+load_dotenv()
+if os.getenv('ENVIRONMENT', 'local') != 'production':
+    from dotenv import load_dotenv
+ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
+print(f"ENVIRONMENT = {ENVIRONMENT}")
+
+##change the pem taking path based on your environment
+
+if ENVIRONMENT == 'production':
+    secret_path = "/run/secrets/doctor_private_key"
+ 
+
+    # take first file inside /run/secrets (regardless of filename)
+    print(f"✅ Loaded secret key from: {secret_path}")
+else:
+    print("Loading the development private key")
+    secret_path="C:/Users/user/Desktop/akhil/private.pem"
+with open(secret_path, "r") as f:
     private_key = f.read()
 def generate_tokens(user):
     print("private key is ====",private_key)

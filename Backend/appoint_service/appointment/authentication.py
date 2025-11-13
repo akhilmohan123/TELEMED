@@ -3,7 +3,19 @@ from django.conf import settings
 from rest_framework import authentication
 from rest_framework.exceptions import AuthenticationFailed
 from django.contrib.auth import get_user_model
-with open("C:/Users/user/Desktop/akhil/public.pem", "r") as f:
+load_dotenv()
+if os.getenv('ENVIRONMENT', 'local') != 'production':
+    from dotenv import load_dotenv
+ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
+print(f"ENVIRONMENT = {ENVIRONMENT}")
+
+if ENVIRONMENT == 'production':
+    secret_path="/run/secrets/doctor_public_key"
+    print("Loaded the public key from docker secrets !!")
+else:
+    secret_path="C:/Users/user/Desktop/akhil/public.pem"
+    print("Loaded the development public key !!")
+with open(secret_path, "r") as f:
     public_key = f.read()
 User = get_user_model()
 class AuthServiceUser:
