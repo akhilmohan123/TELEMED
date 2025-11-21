@@ -1,23 +1,14 @@
-version: "3.8"
-
 services:
   doctor-service:
-    container_name: doctor_service
-    image: doctorimage
+    image: doctorimage:latest
     ports:
       - "8001:8001"
-    environment:
-      ENVIRONMENT: production
-      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
     secrets:
-      - doctor_public_key
       - doctor_private_key
-    volumes:
-      - ./doctor_service/media:/app/media
-    restart: always
+      - doctor_public_key
 
 secrets:
-  doctor_public_key:
-    file: ./public.pem
   doctor_private_key:
-    file: ./private.pem
+    file: ./doctor_private_key
+  doctor_public_key:
+    file: ./doctor_public_key

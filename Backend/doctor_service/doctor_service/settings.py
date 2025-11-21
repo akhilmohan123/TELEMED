@@ -21,6 +21,13 @@ ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
+KEYS_DIR = os.path.join(PROJECT_ROOT, "keys")
+# KEYS_DIR => /Backend/keys
+
+PRIVATE_KEY_PATH = os.path.join(KEYS_DIR, "private.pem")
+PUBLIC_KEY_PATH = os.path.join(KEYS_DIR, "public.pem")
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 

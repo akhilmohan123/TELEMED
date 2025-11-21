@@ -13,6 +13,10 @@ from rest_framework.parsers import MultiPartParser, FormParser
 import jwt
 import requests
 import uuid
+from dotenv import load_dotenv
+import os
+load_dotenv()
+ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
 class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = DoctorCreateSerializer
     permission_classes = [IsAuthenticated]
@@ -86,7 +90,10 @@ class GetAllDoctors(APIView):
             doctor_data = DoctorCreateSerializer(doctors, many=True).data
 
             # 2️ Fetch all users from Auth Service
-            auth_service_url = "http://127.0.0.1:8000/users/api/users"
+            if ENVIRONMENT == 'production':
+                auth_service_url = "http://user-service:8000/users/api/users"
+            else:
+                auth_service_url = "http://127.0.0.1:8000/users/api/users"
             response = requests.get(auth_service_url)
             user_data = response.json()
 
