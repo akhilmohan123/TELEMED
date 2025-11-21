@@ -6,6 +6,8 @@ from rest_framework.permissions import AllowAny
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
 from .models import User
+from dotenv import load_dotenv
+import os
 load_dotenv()
 if os.getenv('ENVIRONMENT', 'local') != 'production':
     from dotenv import load_dotenv
