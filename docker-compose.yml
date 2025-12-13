@@ -1,0 +1,102 @@
+version: "3.9"
+
+networks:
+  test_network:
+
+services:
+
+  auth-service:
+    container_name: auth_service
+    build: ./Backend/auth_service
+    ports:
+      - "8000:8000"
+    environment:
+      ENVIRONMENT: "production"
+      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    volumes:
+      - ./Backend/keys:/app/keys
+    networks:
+      - test_network
+
+  doctor-service:
+    container_name: doctor_service
+    build: ./Backend/doctor_service
+    ports:
+      - "8001:8001"
+    environment:
+      ENVIRONMENT: "production"
+      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    volumes:
+      - ./Backend/keys:/app/keys
+    networks:
+      - test_network
+
+  patient-service:
+    container_name: patient_service
+    build: ./Backend/patient_service
+    ports:
+      - "8002:8002"
+    environment:
+      ENVIRONMENT: "production"
+      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    volumes:
+      - ./Backend/keys:/app/keys
+    networks:
+      - test_network
+
+  appointment-service:
+    container_name: appoint_service
+    build: ./Backend/appoint_service
+    ports:
+      - "8003:8003"
+    environment:
+      ENVIRONMENT: "production"
+      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    volumes:
+      - ./Backend/keys:/app/keys
+    networks:
+      - test_network
+
+  media-service:
+    container_name: media_service
+    build: ./Backend/media_service
+    ports:
+      - "8004:8004"
+    environment:
+      ENVIRONMENT: "production"
+      DATABASE_URL: "postgresql://neondb_owner:npg_SQAzEZO2sy1u@ep-falling-snow-ad2bt5sv-pooler.c-2.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+    volumes:
+      - ./Backend/keys:/app/keys
+    networks:
+      - test_network
+
+  frontend:
+    container_name: frontend
+    build: ./frontend
+    ports:
+      - "3000:3000"   # Direct access React if needed
+    volumes:
+      - ./frontend:/app   # <-- LIVE CODE SYNC
+      - /app/node_modules # <-- Prevent conflict
+    networks:
+      - test_network
+
+
+
+  nginx:
+    container_name: nginx
+    build: ./Backend/nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./Backend/nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - auth-service
+      - doctor-service
+      - patient-service
+      - appointment-service
+      - media-service
+      - frontend
+    networks:
+      - test_network
+

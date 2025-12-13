@@ -1,40 +1,40 @@
-import axios from 'axios'
+import axios from 'axios';
+import { attachAuthInterceptors } from './interceptors';
+// Auth API
+export const auth_api = axios.create({
+    baseURL: "/users/api"
+});
 
+// Doctor API
+export const doctor_api = axios.create({
+    baseURL: "/doctor/api"
+});
 
-//regarding the auth api
-export const auth_api=axios.create({
-    baseURL:"/users/api"
-})
+// Patient API
+export const patient_api = axios.create({
+    baseURL: "/patient/api"
+});
 
-//regarding the doctor_Service api
+// Appointment API
+export const appointment_api = axios.create({
+    baseURL: "/appointment/api"
+});
 
-export const doctor_api=axios.create({
-    baseURL:"/doctor/api"
-})
+// Media API (keep full URL only if media is not behind Nginx)
+export const media_api = axios.create({
+    baseURL: "/media/api"  // if routed through nginx
+});
 
-//reagarding the patient service
+[
+  doctor_api,
+  patient_api,
+  appointment_api,
+  media_api,
+].forEach(attachAuthInterceptors);
 
-export const patient_api=axios.create({
-    baseURL:"/patient/api"
-})
+// Default axios
+const axiosconfig = axios.create({
+    baseURL: "/"   // use root, nginx handles routing
+});
 
-//regarding the appointment api
-
-export const appointment_api=axios.create({
-    baseURL:"/appointment/api"
-})
-
-
-//regarding the media api 
-
-export const media_api=axios.create({
-    baseURL:"http://127.0.0.1:8004/"
-})
-
-
-
-const axiosconfig=axios.create({
-    baseURL:"http://127.0.0.1:8000/"
-})
-
-export default axiosconfig
+export default axiosconfig;

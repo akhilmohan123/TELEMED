@@ -1,0 +1,44 @@
+
+
+services:
+  api-gateway:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - user_service
+      - doctor_service
+      - patient_service
+      - appointment_service
+      - media_service
+
+  user_service:
+    build: ./auth_service
+    expose:
+      - "8000"
+
+  doctor_service:
+    build: ./doctor_service
+    expose:
+      - "8001"
+
+  patient_service:
+    build: ./patient_service
+    expose:
+      - "8002"
+
+  appointment_service:
+    build: ./appointment_service
+    expose:
+      - "8003"
+  media_service:
+    build: ./media_service
+    expose:
+      - "8004"
+
+  frontend:
+    build: ./frontend
+    expose:
+      - "3000"

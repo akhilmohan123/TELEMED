@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import './Resetpassword.css';
 import { useParams } from 'react-router-dom'; 
 import axios from 'axios';
-import axiosconfig from '../axios/axios';
+import  { auth_api } from '../axios/axios';
 
 function Resetpassword() {
   const [password, setPassword] = useState('');
@@ -15,7 +15,8 @@ function Resetpassword() {
       setError('Passwords do not match');
     } else {
       setError('');
-      await axiosconfig.post(`/api/reset-password/${token}`, { password: password,confirm_password:confirmpassword }).then((res)=>{
+      alert("before")
+      await auth_api.post(`/reset-password/${token}`, { password: password,confirm_password:confirmpassword }).then((res)=>{
         console.log(res.data)
         if(res.data.Error){
           setError("Something went wrong please try again later!")

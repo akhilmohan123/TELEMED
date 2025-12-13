@@ -1,13 +1,20 @@
 import requests
 from decouple import config
-
+from dotenv import load_dotenv
 import os
 # USER_SERVICE_URL = config('USER_SERVICE_URL')
 # DOCTOR_SERVICE_URL = config('DOCTOR_SERVICE_URL')
 # PATIENT_SERVICE_URL=config('PATIENT_SERVICE_URL')
-USER_SERVICE_URL = "http://127.0.0.1:8000/"
-DOCTOR_SERVICE_URL = "http://127.0.0.1:8001/"
-PATIENT_SERVICE_URL="http://127.0.0.1:8002/"
+ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
+
+if ENVIRONMENT == 'production':
+    USER_SERVICE_URL = "http://user-service:8000/"
+    DOCTOR_SERVICE_URL = "http://doctor-service:8001/"
+    PATIENT_SERVICE_URL="http://patient-service:8002/"
+else:
+    USER_SERVICE_URL = "http://127.0.0.1:8000/"
+    DOCTOR_SERVICE_URL = "http://127.0.0.1:8001/"
+    PATIENT_SERVICE_URL="http://127.0.0.1:8002/"
 
 def get_user_details(user_id):
     print("called the function ")

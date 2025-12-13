@@ -1,0 +1,28 @@
+REtail modification patch
+
+Tables
+formmaster
+formsections
+lovtable
+views
+functions 
+functiongroupmapping
+anchortags
+funccolumns
+
+
+xml
+html
+
+dynamicmultiform.php
+smartform.php
+
+lib.js
+smartform.js
+routecontroller
+retailmodificationformcontroller
+retailmodificationview
+pdfgeneration.php
+
+aadharapi.php
+masterfor schema conversion

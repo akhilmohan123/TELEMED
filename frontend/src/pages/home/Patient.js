@@ -6,7 +6,6 @@ import Login from '../user/Login'
 
 function Patient() {
     const navigate=useNavigate()
-    const token=localStorage.getItem('token')
     // useEffect(() => {
     //     if (!token) {
     //         navigate("/login");

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axiosconfig, { auth_api, patient_api } from '../axios/axios';
-import {toast} from 'react' 
+import {toast} from 'react-toastify' 
 function Add() {
   const [medicalHistory, setMedicalHistory] = useState('');
   const [showOtherField, setShowOtherField] = useState(false);

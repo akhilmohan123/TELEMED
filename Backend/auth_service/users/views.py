@@ -13,6 +13,7 @@ import jwt,datetime
 from django.db import connection
 from django.core.mail import send_mail
 from django.conf import settings
+from .authentication import JWTAuthentication
 class RegistrationView(APIView):
     permission_classes=[AllowAny]
     def post(self,request):
@@ -101,9 +102,15 @@ class ForgotPasswordView(APIView):
     def post(Self,request):
         email=request.data.get('email')
         print("email is ",email)
-        user=User.objects.filter(email=email).first()
+        if isinstance(email, dict):
+            email = email.get('email')
+            print("extracted email is ",email)
+        print(User.objects.all().values())
+        user = User.objects.filter(email=email).first()
+
+
         if not user:
-            return Response({"Error":"user with this email does not exist"})
+            return Response({"Error":"user with this email does not exist"},status=404)
         
         #payload for generating the token
         payload={
@@ -130,6 +137,7 @@ class ForgotPasswordView(APIView):
 class ResetPasswordView(APIView):
     permission_classes=[AllowAny]
     def post(self,request,token):
+        print("the reset password is called actually")
         password=request.data.get('password')
         if not password:
             return Response({"Error":"Password is required"})

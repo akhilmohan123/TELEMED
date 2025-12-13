@@ -16,7 +16,7 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Step 6: Expose Django port
-EXPOSE 8000
+EXPOSE 8002
 
 # Step 7: Run the Django app
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8002"]

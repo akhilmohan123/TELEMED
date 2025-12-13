@@ -1,0 +1,9 @@
+FROM nginx:latest
+
+# Remove default config
+RUN rm /etc/nginx/conf.d/default.conf
+
+# Copy the custom nginx config to the correct location
+COPY conf/nginx.conf /etc/nginx/nginx.conf
+
+EXPOSE 80

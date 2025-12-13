@@ -16,17 +16,28 @@ print(f"ENVIRONMENT = {ENVIRONMENT}")
 
 ##change the pem taking path based on your environment
 
-if ENVIRONMENT == 'production':
-    secret_path = "/run/secrets/doctor_private_key"
- 
+if ENVIRONMENT == "production":
 
-    # take first file inside /run/secrets (regardless of filename)
-    print(f"✅ Loaded secret key from: {secret_path}")
+    secret_path_private = f"/app/keys/private.pem"
+    secret_path_public =  f"/app/keys/public.pem"
+    print(f"🔑 Loaded secret key from: {secret_path_private} and {secret_path_public}")
+
 else:
-    print("Loading the development private key")
-    secret_path="C:/Users/user/Desktop/akhil/private.pem"
-with open(secret_path, "r") as f:
+    print("🔧 Loading development private/public keys")
+    SERVICE_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    PROJECT_ROOT = os.path.dirname(SERVICE_BASE)
+    KEYS_DIR = os.path.join(PROJECT_ROOT, "keys")
+
+    secret_path_private = os.path.join(KEYS_DIR, "private.pem")
+    secret_path_public = os.path.join(KEYS_DIR, "public.pem")
+
+
+# Read key files
+with open(secret_path_private, "r") as f:
     private_key = f.read()
+
+with open(secret_path_public, "r") as f:
+    public_key = f.read()
 def generate_tokens(user):
     print("private key is ====",private_key)
     access_payload={

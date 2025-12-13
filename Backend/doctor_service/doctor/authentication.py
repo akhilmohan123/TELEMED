@@ -8,8 +8,6 @@ import os
 
 
 
-import os
-
 def load_secret_file(filename):
     """
     Loads secret contents from /run/secrets in production.
@@ -20,7 +18,7 @@ def load_secret_file(filename):
 
     if ENVIRONMENT == "production":
         # Docker secret path
-        secret_path = f"/run/secrets/{filename}"
+        secret_path = f"/app/keys/{filename}"
     else:
         print("inside the else")
         # Local: keys inside common Backend folder
@@ -73,7 +71,7 @@ class JWTAuthentication(authentication.BaseAuthentication):
         print("Extracted token:", token)
 
         try:
-            payload = jwt.decode(token, public_key, algorithms=["RS256"])
+            payload = jwt.decode(token, PUBLIC_KEY, algorithms=["RS256"])
             print("Decoded payload:", payload)
 
             user = AuthServiceUser(payload.get("id"), payload.get("email"))

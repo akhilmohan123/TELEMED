@@ -12,6 +12,7 @@ import { useNavigate } from "react-router-dom";
 import { CSSProperties } from "react";
 import PulseLoader from "react-spinners/PulseLoader"; // More professional loader
 import axios from "axios";
+import {toast} from 'react-toastify'
 
 // Spinner CSS for centering
 const override: CSSProperties = {
@@ -34,6 +35,11 @@ function Login() {
   });
   const [loading, setLoading] = useState(false); // loading state
   const [color, setColor] = useState("#36D7B7"); // Professional green-blue spinner color
+  const [showForgot, setShowForgot] = useState(false);
+  const [resetEmail, setResetEmail] = useState("");
+
+
+
   const navigate = useNavigate();
 
   async function handlechange(e) {
@@ -42,6 +48,48 @@ function Login() {
       ...prevdata,
       [name]: value,
     }));
+  }
+
+  async function handleResetlink() {
+    var email={email:resetEmail}
+try {
+  const res = await auth_api.post(
+    "/forgot_password",
+    { email }, // <-- Wrap email as object if backend expects JSON body
+    {
+      headers: { "Content-Type": "application/json" },
+      withCredentials: true,
+    }
+  );
+  console.log("Success:", res.data); // user exists & mail sent
+  toast.success("Password reset link sent to your email");
+  setShowForgot(false)
+} 
+catch (error) {
+  if (error.response) {
+    // Check status code
+    if (error.response.status === 404) {
+      console.log("❗ User does not exist");
+      toast.error("User with this email does not exist");
+          // or set state for UI message
+    } 
+    else if (error.response.status === 400) {
+      console.log("Invalid email format");
+      toast.error("Invalid email format");
+    }
+    else {
+      console.log("Server Error:", error.response.status);
+      toast.error("Server Error. Please try again later.");
+    }
+  } else {
+    console.log("Network Error:", error.message);
+    toast.error("Network Error. Please check your connection.");
+  }
+}
+
+  }
+  async function handleForgotPassword() {
+    setShowForgot(true); // show the email input field
   }
 
   async function handleclick(e) {
@@ -121,12 +169,39 @@ function Login() {
                 {loading ? "Logging in..." : "Login"}{" "}
                 {/* Change text when loading */}
               </MDBBtn>
-              <p className="small fw-bold mt-2 pt-1 mb-2">
-                Don't have an account?{" "}
-                <a href="/signup" className="link-danger">
-                  Register
-                </a>
-              </p>
+              <div className="d-flex align-items-center gap-2">
+                <p className="small fw-bold mt-2 pt-1 mb-2">
+                  Don't have an account?{" "}
+                  <a href="/signup" className="link-danger">
+                    Register
+                  </a>
+                </p>
+                <p className="small fw-bold m-0">
+                  <span
+                    onClick={handleForgotPassword}
+                    style={{ cursor: "pointer" }}
+                    className="link-danger"
+                  >
+                    Forgot Password
+                  </span>
+                </p>
+              </div>
+              {showForgot && (
+                <div className="mt-3">
+                  <MDBInput
+                    wrapperClass="mb-3"
+                    label="Enter registered email"
+                    type="email"
+                    size="md"
+                    value={resetEmail}
+                    onChange={(e) => setResetEmail(e.target.value)}
+                  />
+
+                  <MDBBtn color="danger" size="sm" onClick={handleResetlink}>
+                    Send Reset Link
+                  </MDBBtn>
+                </div>
+              )}
             </div>
           </MDBCol>
         </MDBRow>

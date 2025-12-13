@@ -18,6 +18,7 @@ import Medicine from './pages/home/medicine/Medicine';
 import SpeceficMedicine from './pages/home/medicine/SpeceficMedicine';
 import Refer from './pages/home/refers/Refer';
 import Resetpassword from './pages/user/Resetpassword';
+import { ToastContainer } from "react-toastify";
 function App() {
   return (
     <BrowserRouter>
@@ -43,7 +44,16 @@ function App() {
       
      
     </Routes>
+          <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop
+        closeOnClick
+        pauseOnHover
+      />
     </BrowserRouter>
+    
   );
 }
 
