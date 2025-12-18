@@ -21,6 +21,7 @@ class DoctorModel(models.Model):
     experiance = models.IntegerField(default=0, null=True)
     available_status=models.CharField(max_length=20, choices=STATUS_CHOICES, default="available")
     image=models.ImageField(upload_to='image/',default='default_images/default_avatar.png')
+    amount=models.IntegerField(default=0,null=True)
 
     unique_together=("doctor","date","time")
 

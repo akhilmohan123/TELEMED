@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
+
 from .serializers import DoctorCreateSerializer,GetDoctorSerializer,GetSpeceficDoctorSerializer
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics
@@ -28,24 +29,27 @@ class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
         except DoctorModel.DoesNotExist:
             return None
     def create(self, request, *args, **kwargs):
-        user_id=request.user.id#get the user id from the payload
-        instance=self.get_object(user_id)
-        print(request.data)
-        if instance:
-            ##if the user is there update the profile
-            serializer=self.get_serializer(instance,data=request.data,partial=True)
-            serializer.is_valid(raise_exception=True)
-            serializer.save()
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        else:
-            #if the user is not there create a new profile
-            serializer=self.get_serializer(data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(user_id=user_id)
-            return Response(serializer.data,status=status.HTTP_201_CREATED)
-        
-        instance = self.get_object()
-        # If the instance exists, update the profile instead of creating a new one
+        user_id = request.user.id  # coming from internal/auth service
+
+        data = request.data.copy()
+        data['user_id'] = user_id  # inject BEFORE serializer
+
+        instance = DoctorModel.objects.filter(user_id=user_id).first()
+
+        serializer = (
+        self.get_serializer(instance, data=data, partial=True)
+        if instance
+        else self.get_serializer(data=data)
+        )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            serializer.data,
+            status=status.HTTP_200_OK if instance else status.HTTP_201_CREATED
+        )
+
 
 
 class GetDoctordata(APIView):

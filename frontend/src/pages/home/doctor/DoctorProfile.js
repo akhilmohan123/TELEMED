@@ -4,7 +4,7 @@ import './doctor.css'
 import Navbar from '../Navbar'
 import {toast} from 'react-toastify'
 function DoctorProfile() {
-    const [user,Setuser]=useState({organization_name:"",location:"",phonenumber:null,speciality:"",licensenumber:null,experiance:null})
+    const [user,Setuser]=useState({organization_name:"",location:"",phonenumber:null,speciality:"",licensenumber:null,experiance:null,amount:""})
     const[availablity,Setavailability]=useState()
     const[fileimage,Setfileimage]=useState(null)
     const[profilepic,Setprofilepic]=useState()
@@ -25,7 +25,8 @@ function DoctorProfile() {
                 phonenumber:res.data.phone_number,
                 speciality:res.data.speciality,
                 licensenumber:res.data.license_no,
-                experiance:res.data.experiance
+                experiance:res.data.experiance,
+                amount:res.data.amount
                }
 
             )
@@ -38,7 +39,8 @@ function DoctorProfile() {
              phonenumber:"",
              speciality:"",
              licensenumber:"",
-             experiance:""
+             experiance:"",
+             amount:""
             }
 
         )
@@ -60,10 +62,12 @@ function DoctorProfile() {
         experiance:user.experiance,
         location:user.location,
         available_status:availablity,
-        image:fileimage
+        image:fileimage,
+        amount:user.amount
       }
       console.log(userdata)
       const formData = new FormData();
+      alert("amount is ====="+userdata.amount)
 // Append each field to FormData
 formData.append('phone_number', userdata.phone_number);
 formData.append('speciality', userdata.speciality);
@@ -72,6 +76,7 @@ formData.append('organization_name', userdata.organization_name);
 formData.append('experiance', userdata.experiance);
 formData.append('location', userdata.location);
 formData.append('available_status', userdata.available_status);
+formData.append('amount', userdata.amount);
 // Append the image file
 if (userdata.image) {
     formData.append('image', userdata.image);
@@ -180,6 +185,10 @@ console.log(formData)
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Experiance</label>
                                 <input class="form-control" id="inputPhone" type="number" placeholder="Enter your Experiance" name='experiance' value={user.experiance}onChange={handlechange}/>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="small mb-1" for="inputPhone">Amount</label>
+                                <input class="form-control" id="inputPhone" type="number" placeholder="Enter your Amount" name='amount' value={user.amount} onChange={handlechange}/>
                             </div>
                             <div class="col-md-6">
                                 <label class="small mb-1 p-2" for="inputPhone" id='label-doctor'>Availability</label>
