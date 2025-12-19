@@ -1,7 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 
-from .serializers import DoctorCreateSerializer,GetDoctorSerializer,GetSpeceficDoctorSerializer
+from .serializers import DoctorCreateSerializer,GetDoctorSerializer,GetSpeceficDoctorSerializer,GetAllDoctorsSerializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework import generics
 from rest_framework.permissions import IsAuthenticated,AllowAny
@@ -91,7 +91,7 @@ class GetAllDoctors(APIView):
         try:
             # 1️ Fetch all doctors
             doctors = DoctorModel.objects.all()
-            doctor_data = DoctorCreateSerializer(doctors, many=True).data
+            doctor_data = GetAllDoctorsSerializers(doctors, many=True).data
 
             # 2️ Fetch all users from Auth Service
             if ENVIRONMENT == 'production':
@@ -107,11 +107,11 @@ class GetAllDoctors(APIView):
             # 4 Merge doctor info with corresponding user info
             merged_data = []
             for doc in doctor_data:
-                doc_id=str(doc["user_id"])
+                doc_id=str(doc["id"])
                 doc_id=doc_id.split('-')[-1]
                 print("doctor user id is ",int(doc_id))
                 user = user_lookup.get(str(int(doc_id)))
-                print(doc["user_id"],"corresponding user is ",user)
+                print(doc["id"],"corresponding user is ",user)
 
                 merged = {
                     **doc,
@@ -124,6 +124,7 @@ class GetAllDoctors(APIView):
             return Response(merged_data, status=status.HTTP_200_OK)
 
         except Exception as e:
+            print(f"There is an exception while fetching all doctors {e}")
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class GetSpeceficDoctor(APIView):

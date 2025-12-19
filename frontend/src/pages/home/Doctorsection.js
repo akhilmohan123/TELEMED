@@ -71,6 +71,9 @@ function Content() {
                       <p className="flex items-center mb-2 text-gray-700">
                         <MDBIcon fas icon="phone" className="mr-2 text-blue-600" /> {data.phone_number}
                       </p>
+                      <p className="flex items-center mb-2 text-gray-700">
+                        <MDBIcon fas icon="amount" className="mr-2 text-blue-600" /> Consultation Price : {data.amount} INR
+                      </p>
                     </div>
                     <div className="flex justify-between items-center">
                       <p className="text-green-600 font-semibold flex items-center">
