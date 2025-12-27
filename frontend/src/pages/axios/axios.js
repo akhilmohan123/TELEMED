@@ -25,11 +25,17 @@ export const media_api = axios.create({
     baseURL: "/media/api"  // if routed through nginx
 });
 
+
+// Payment API (keep full URL only if media is not behind Nginx)
+export const payment_api = axios.create({
+    baseURL: "/payment/api"  // if routed through nginx
+});
 [
   doctor_api,
   patient_api,
   appointment_api,
   media_api,
+  payment_api
 ].forEach(attachAuthInterceptors);
 
 // Default axios

@@ -8,9 +8,11 @@ class Appointmentmodel(models.Model):
     date=models.DateField()
     time=models.TimeField()
     note=models.CharField(max_length=20)
-    status=models.CharField(max_length=20,choices=[("completed","completed"),("pending","pending")],null=True,default='pending')
+    status=models.CharField(max_length=20,choices=[("completed","completed"),("pending","pending"),("cancelled","cancelled")],null=True,default='pending')
     refer_doctor_id = models.IntegerField(null=True, blank=True)
     referrence_no=models.CharField(max_length=10,blank=True,editable=False,default=create_new_ref_number)
+    payment_status=models.CharField(max_length=20,choices=[("pending","pending"),("paid","paid"),("failed","failed")],null=True,default='pending')
+    amount=models.IntegerField()
     def save(self, *args, **kwargs):
         if not self.referrence_no:
             self.referrence_no = self.generate_unique_ref_no()

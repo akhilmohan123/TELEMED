@@ -73,6 +73,7 @@ class Getspeceficpatient(APIView):
     permission_classes=[AllowAny]
     def get(self,request,patient_id):
         try:
+            print("Called the specific patient view")
             #fetch the seecific patient by id
             patient=PatientProfile.objects.get(id=patient_id)
             serializer=GetPatientProfileSerializer(patient)

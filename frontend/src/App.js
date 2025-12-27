@@ -18,11 +18,15 @@ import Medicine from './pages/home/medicine/Medicine';
 import SpeceficMedicine from './pages/home/medicine/SpeceficMedicine';
 import Refer from './pages/home/refers/Refer';
 import Resetpassword from './pages/user/Resetpassword';
+
 import { ToastContainer } from "react-toastify";
+import Payment from './pages/home/payment/Payment.js';
+
 function App() {
   return (
     <BrowserRouter>
     <Routes>
+    
       <Route path='/signup' element={<Signup/>}/>
       <Route path='/login' element={<Login/>}/>
       <Route path='/user' element={<Patient/>}/>
@@ -41,6 +45,7 @@ function App() {
       <Route path='/specefic-medicine/:id' element={<SpeceficMedicine/>}/>
       <Route path='/get-refers' element={<Refer/>}/>
       <Route path='/reset-password/:token' element={<Resetpassword/>}></Route>
+      <Route path='/payment/:id' element={<Payment/>}></Route>
       
      
     </Routes>

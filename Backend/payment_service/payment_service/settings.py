@@ -11,10 +11,23 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-
+import os
+from urllib.parse import parse_qsl, urlparse
+from dotenv import load_dotenv
+load_dotenv()
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+ENVIRONMENT = os.getenv('ENVIRONMENT', 'local')
 BASE_DIR = Path(__file__).resolve().parent.parent
+PROJECT_ROOT = os.path.dirname(BASE_DIR)
 
+KEYS_DIR = os.path.join(PROJECT_ROOT, "keys")
+
+# KEYS_DIR => /Backend/keys
+
+
+
+
+PUBLIC_KEY_PATH = os.path.join(KEYS_DIR, "public.pem")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -31,15 +44,20 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    'payment',
+    'rest_framework',
+    'rest_framework.authtoken',
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -69,16 +87,85 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "payment_service.wsgi.application"
 
+REST_FRAMEWORK={
 
+    'DEFAULT_AUTHENTICATION_CLASSES':(
+
+        'payment.authentication.JWTAuthentication',
+
+    ),
+
+    'DEFAULT_PERMISSION_CLASSES':(
+
+        'rest_framework.permissions.IsAuthenticated',
+
+    )
+
+    
+
+}
+
+CORS_ALLOWED_ORIGINS = [
+
+    'http://localhost:3000',  # Allow React frontend running on this origin
+
+]
+
+CORS_ALLOW_CREDENTIALS=True
+
+
+
+CSRF_TRUSTED_ORIGINS = [
+
+    "http://localhost:3000",
+
+]
+
+SESSION_COOKIE_SAMESITE = "Lax"
+
+CSRF_COOKIE_SAMESITE = "Lax"
+
+SESSION_COOKIE_SECURE = False
+
+CSRF_COOKIE_SECURE = False
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+print("Environemnt is ===", ENVIRONMENT)
+
+if ENVIRONMENT == 'production':
+
+    DATABASE_URL = os.getenv('DATABASE_URL')
+
+    url = urlparse(DATABASE_URL)
+
+    DATABASES = {
+
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': url.path[1:],
+            'USER': url.username,
+            'PASSWORD': url.password,
+            'HOST': url.hostname,
+            'PORT': url.port,
+            'OPTIONS': dict(parse_qsl(url.query)),
+        }
+
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME':"payment_service",
+            'USER':'postgres',
+            'PASSWORD':'akhilmohanpostgres@123',
+            'HOST':'localhost',
+            'PORT':'5432',
+         }
+
+        }
+
+
 
 
 # Password validation

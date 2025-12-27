@@ -5,9 +5,10 @@ import axiosconfig, { appointment_api } from '../../axios/axios';
 import '../appoinment/Doctorappointment.css';
 
 function Doctorappointment() {
-  const [data, setData] = useState({ date: '', time: '', note: '' });
+  const [data, setData] = useState({ date: '', time: '', note: '',amount:0 });
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [loadingPayment, setLoadingPayment] = useState(false);
   const { id } = useParams();
   const backgroundImage = '/img/services.jpg';
 
@@ -24,9 +25,16 @@ function Doctorappointment() {
       });
       console.log(response)
       setSuccess(true);
+      setLoadingPayment(true);
+      alert("Response is ====="+response.data+"response id is ===="+response.data.id);
+          // Redirect to payment after short delay
+      setTimeout(() => {
+      window.location.href = `/payment/${response.data.id}`;
+      }, 2000);
       setError('');
     } catch (err) {
       setSuccess(false);
+      setLoadingPayment(false);
       setError("There is an Appointment on the same date! Choose another date and time.");
     }
   };
@@ -42,8 +50,15 @@ function Doctorappointment() {
 
               {success && (
                 <Alert variant="success" onClose={() => setSuccess(false)} dismissible>
-                  <Alert.Heading>Appointment Booked Successfully!</Alert.Heading>
-                  <p>Your appointment has been scheduled. </p>
+                  <Alert.Heading>Appointment Request Created!</Alert.Heading>
+                 {loadingPayment ? (
+                <p>
+                   Please wait while we redirect you to the payment screen
+                    to confirm your appointment…
+                </p>
+                  ) : (
+                 <p>Your appointment has been scheduled.</p>
+                )}
                 </Alert>
               )}
 
@@ -90,8 +105,8 @@ function Doctorappointment() {
                 </Form.Group>
 
                 <div className="d-grid">
-                  <Button variant="primary" type="submit">
-                    Submit
+                  <Button variant="primary" type="submit" disabled={loadingPayment}>
+                    {loadingPayment ? 'Redirecting…' : 'Submit'}
                   </Button>
                 </div>
               </Form>

@@ -12,6 +12,7 @@ if ENVIRONMENT == 'production':
     DOCTOR_SERVICE_URL = "http://doctor-service:8001/"
     PATIENT_SERVICE_URL="http://patient-service:8002/"
 else:
+    print("in local environment")
     USER_SERVICE_URL = "http://127.0.0.1:8000/"
     DOCTOR_SERVICE_URL = "http://127.0.0.1:8001/"
     PATIENT_SERVICE_URL="http://127.0.0.1:8002/"
@@ -34,6 +35,7 @@ def get_user_details(user_id):
 def get_doctor_details(doctor_id):
     try:
         response=requests.get(f"{DOCTOR_SERVICE_URL}/doctor/api/get-doctor/{doctor_id}/")
+        print("response from the status code is ===",response.status_code)
         if response.status_code==200:
             doctor_data= response.json()
             user_id=doctor_data.get('user_id')
@@ -44,7 +46,9 @@ def get_doctor_details(doctor_id):
             print("user id in doctor details is ",user_id)
             print("doctor data is ",doctor_data)
         else:
+            print("Aside the else ")
             doctor_data=None
+        return doctor_data
     except Exception as e:
         print(f"Error fetching the doctor details: {e}")
     
@@ -65,7 +69,8 @@ def get_doctor_details(doctor_id):
 
 def get_patient_details(patient_id):
     try:
-        response=requests.get(f"{PATIENT_SERVICE_URL}/patient/api/get-patient/{patient_id}")
+        response=requests.get(f"{PATIENT_SERVICE_URL}/patient/api/get-patient/{patient_id}/")
+        print("response from the patient profile is ====",response)
         if response.status_code==200:
             patient_data= response.json()
             print("patient data is =====",patient_data)

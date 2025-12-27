@@ -6,7 +6,7 @@ class AppointmentSerializers(serializers.ModelSerializer):
     doctor_id = serializers.IntegerField()
     class Meta:
       model=Appointmentmodel
-      fields=["id","doctor_id","doctor_name","date","time","note","referrence_no","refer_doctor_id","status"]
+      fields=["id","doctor_id","doctor_name","date","time","note","referrence_no","refer_doctor_id","status","amount"]
       read_only_fields=["patient_id","status"]
       print("the class is called ")
     def get_doctor_name(self, obj):

@@ -10,5 +10,7 @@ urlpatterns = [
    path('api/add-medicine',AddMedicineViews.as_view(),name='add-medicine'),
    path('api/get-medicines',GetMedicineView.as_view(),name='get-medicine'),
    path('api/specefic-medicine/<int:id>',GetSpeceficMedicine.as_view(),name='get-specefic'),
-   path('api/get-refer-appointments',GetReferAppointment.as_view(),name='get-refer-appointments')
+   path('api/get-refer-appointments',GetReferAppointment.as_view(),name='get-refer-appointments'),
+   path('api/appointment/<int:id>',Appointmentview.as_view(),name='appointment'),
+   path('api/appointment-mark/<int:id>',Appointmentmarkview.as_view(),name='appointment-mark'),
 ]

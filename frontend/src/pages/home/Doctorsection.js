@@ -14,12 +14,12 @@ function Content() {
 
   async function getAlldoctors()
   {
-      await doctor_api.get('/get-all-doctors', {
+     await doctor_api.get('/get-all-doctors', {
       withCredentials:true
     }).then((res) => {
       console.log(res)
       setDoctor(res.data);
-    });
+    })
   }
 
   return (

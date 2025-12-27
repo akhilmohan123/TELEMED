@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
+
+
 from .serializers import AppointmentSerializers,GetdoctorAppointmentserializer,GetspeceficSerializer,EditPatientSerializer,AddMedicineSerializer,GetMedicineSerializer,GetSpeceficMedicineSerializer,GetReferAppointmentSerializer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .authentication import JWTAuthentication
@@ -15,25 +17,31 @@ class Appointmentview(APIView):
     serializer_class=AppointmentSerializers
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
-    def get(self,request,*args,**kwargs):
-        user=self.request.user.id
-        print("user id is ====",user)
-        user_data=get_user_details(user)
-        patient=get_patient_id_from_user(user)
-        doctor=get_doctor_id_from_user(user)
-        print("before the user_Data")
-        print(user_data['is_staff'])
-        if user_data['is_staff']:
-            appointments=Appointmentmodel.objects.all()
-        elif user_data['role']==2:
-            print("the role is ====2",doctor)
-            appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
-        elif user_data['role']==1:
-            print("the role is 1 and patient id is ",patient)
-            appointments=Appointmentmodel.objects.filter(patient_id=patient)
-        print(appointments)
-        serializer=self.serializer_class(appointments,many=True)
-        return Response(serializer.data,status=status.HTTP_200_OK)
+    def get(self,request,id=None,*args,**kwargs):
+        if id:
+            #return the amount details 
+            appointments=get_object_or_404(Appointmentmodel,id=id)
+            serializer=self.serializer_class(appointments)  
+            return Response(serializer.data,status=status.HTTP_200_OK)
+        else:
+            user=self.request.user.id
+            print("user id is ====",user)
+            user_data=get_user_details(user)
+            patient=get_patient_id_from_user(user)
+            doctor=get_doctor_id_from_user(user)
+            print("before the user_Data")
+            print(user_data['is_staff'])
+            if user_data['is_staff']:
+                appointments=Appointmentmodel.objects.all()
+            elif user_data['role']==2:
+                print("the role is ====2",doctor)
+                appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
+            elif user_data['role']==1:
+                print("the role is 1 and patient id is ",patient)
+                appointments=Appointmentmodel.objects.filter(patient_id=patient)
+                print(appointments)
+                serializer=self.serializer_class(appointments,many=True)
+            return Response(serializer.data,status=status.HTTP_200_OK)
     def post(self,request,id):
         doctor = get_doctor_details(id)
         print("doctor is =======",doctor)
@@ -42,9 +50,12 @@ class Appointmentview(APIView):
 
             data=request.data.copy()
             data['doctor_id']=doctor['id']
+            print("amount is ======before",data['amount'])
+            data['amount']=doctor['amount']
+            print("amount is ======after",data['amount'])
             serializer=self.serializer_class(data=data)
             doctor_status=change_doctor_status(doctor['id'])
-            print("doctor status is =========",doctor_status)     
+            print("doctor status is =========",doctor_status)    
             if serializer.is_valid() and doctor_status:
                 print("serializer is valid before the save")
                 print("the user id is ====",request.user.id)
@@ -57,7 +68,7 @@ class Appointmentview(APIView):
                 print("serializer is not valid")
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         else:
-            print("in else condition")
+            print("in else condition ")
             return Response({"message": "Doctor is not available"}, status=status.HTTP_400_BAD_REQUEST)
 
     def update(self,request,*args,**kwargs):
@@ -214,3 +225,15 @@ class GetReferAppointment(APIView):
                 return Response(serializer.errors,status=status.HTTP_404_NOT_FOUND)
         else:
             return Response({"message":"No Refer Found For this doctor"},status=status.HTTP_404_NOT_FOUND)
+        
+class Appointmentmarkview:
+      permission_classes=[IsAuthenticated]
+      authentication_classes=[JWTAuthentication]
+      def post(self,request,id):
+          appointment=get_object_or_404(Appointmentmodel,id=id)
+          if appointment:
+              appointment.payment_status='paid'
+              return Response({"message":"Appointment marked as paid"},status=status.HTTP_200_OK)
+          else:
+              appointment.payment_status='pending'
+              return Response({"message":"Appointment not found"},status=status.HTTP_404_NOT_FOUND)
