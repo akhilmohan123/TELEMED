@@ -38,7 +38,7 @@ function Login() {
   const [showForgot, setShowForgot] = useState(false);
   const [resetEmail, setResetEmail] = useState("");
 
-
+  
 
   const navigate = useNavigate();
 
@@ -117,7 +117,10 @@ catch (error) {
         navigate("/home");
       }
     } catch (error) {
-      console.error(error);
+      if(error)
+      {
+        toast.error("Invalid Credentials");
+      }
     } finally {
       setLoading(false); // Stop loading spinner
     }

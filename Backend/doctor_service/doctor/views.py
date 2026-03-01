@@ -22,6 +22,7 @@ class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = DoctorCreateSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
+    
     parser_classes = (MultiPartParser, FormParser)
     def get_object(self,user_id):
         try:
@@ -30,14 +31,14 @@ class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
             return None
     def create(self, request, *args, **kwargs):
         user_id = request.user.id  # coming from internal/auth service
-
+        print("Type of userid is =======",type(user_id))
         data = request.data.copy()
-        data['user_id'] = user_id  # inject BEFORE serializer
-
+        data['user_id']=user_id
+        print("Data ---",data)
         instance = DoctorModel.objects.filter(user_id=user_id).first()
-
+        print("user id from the doctormodel is ===",user_id)
         serializer = (
-        self.get_serializer(instance, data=data, partial=True)
+        self.get_serializer(instance, data=request.data, partial=True)
         if instance
         else self.get_serializer(data=data)
         )
@@ -144,11 +145,12 @@ class GetSpeceficDoctorid(APIView):
     permission_classes=[AllowAny]
     def get(self,request,user_id):
         try:
-            user_id=int(user_id)
             #fetch the specefic doctor by user id 
-            user_id=uuid.UUID(int=user_id)
+            print("userid in doctor view ===",user_id)
             doctor=DoctorModel.objects.get(user_id=user_id)
+            print("doctor data is ",doctor)
             serializer=GetSpeceficDoctorSerializer(doctor)
+
             return Response(serializer.data,status=status.HTTP_200_OK)
         except DoctorModel.DoesNotExist:
             return Response({"error":"Doctor profile not found"},status=status.HTTP_404_NOT_FOUND)

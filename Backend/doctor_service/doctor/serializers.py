@@ -2,15 +2,16 @@ from rest_framework import serializers
 from .models import DoctorModel
 # doctor/serializers.py
 class DoctorCreateSerializer(serializers.ModelSerializer):
-    user_id = serializers.UUIDField()
+    print("doctor create serializer is called")
     amount = serializers.IntegerField(required=True)
-
+    
     class Meta:
         model = DoctorModel
         fields = '__all__'
 
 
     def create(self, validated_data):
+        print("validated data is ====",validated_data)
         return DoctorModel.objects.create(**validated_data)
 
     def update(self, instance, validated_data):

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 function Signup() {
     const[data,Setdata]=useState({Username:"",First_Name:"",Last_Name:"",Password:"",Email:"",role:null})
+    
     const navigate=useNavigate()
     function handlechange(e){
         const{name,value}=e.target
@@ -35,6 +36,7 @@ function Signup() {
             })
         } catch (error) {
             console.log(error)
+            alert("Error during registration. Please try again.")
         }
     }
     

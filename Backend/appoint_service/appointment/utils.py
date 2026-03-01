@@ -34,27 +34,23 @@ def get_user_details(user_id):
 
 def get_doctor_details(doctor_id):
     try:
-        response=requests.get(f"{DOCTOR_SERVICE_URL}/doctor/api/get-doctor/{doctor_id}/")
+        response=requests.get(f"{DOCTOR_SERVICE_URL}/doctor/api/get-doctor-details/{doctor_id}/")
         print("response from the status code is ===",response.status_code)
         if response.status_code==200:
             doctor_data= response.json()
             user_id=doctor_data.get('user_id')
-            user_id=user_id.split("-")
-            user_id=user_id[-1]
-            print("user id parts are ",user_id)
-            user_id=int(user_id)
-            print("user id in doctor details is ",user_id)
-            print("doctor data is ",doctor_data)
+            print("the user id in doctor details is ====",user_id)
+            print("the user id after split is ====",user_id)
         else:
             print("Aside the else ")
             doctor_data=None
-        return doctor_data
     except Exception as e:
         print(f"Error fetching the doctor details: {e}")
-    
+    print("before the user data api call in doctor details")
     #get the user data
     try:
-       response=requests.get(f"{USER_SERVICE_URL}/users/api/get-user/{user_id}")
+       print("the user id is ====",user_id)
+       response=requests.get(f"{USER_SERVICE_URL}/users/api/get-user/{user_id}/")
        if response.status_code==200:
            user_data=response.json()
            print("user data in doctor details is ",user_data)
@@ -84,8 +80,9 @@ def get_patient_details(patient_id):
             patient_data=None
     except Exception as e:
         print(f"Error fetching the patient details: {e}")
-    
+    print("before the user data api call in patient details")
     try:
+         
          response=requests.get(f"{USER_SERVICE_URL}/users/api/get-user/{user_id}")
          if response.status_code==200:
               print("the response is successs ")
@@ -123,6 +120,7 @@ def get_patient_id_from_user(user_id):
 
 def get_doctor_id_from_user(user_id):
     try:
+        print("called the get doctor id from user id function with user id =",user_id)
         response=requests.get(f"{DOCTOR_SERVICE_URL}/doctor/api/get-user-id-doctor/{user_id}/")
         print(response.json())
         if response.status_code==200:

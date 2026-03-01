@@ -1,0 +1,90 @@
+.payment-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.payment-card {
+  background: #fff;
+  padding: 30px 35px;
+  width: 360px;
+  border-radius: 16px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  animation: fadeIn 0.4s ease-in-out;
+}
+
+.payment-title {
+  font-size: 22px;
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.payment-id {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.payment-id span {
+  font-weight: 600;
+  color: #333;
+}
+
+.amount-box {
+  background: #f5f7ff;
+  padding: 18px;
+  border-radius: 12px;
+  margin-bottom: 25px;
+}
+
+.currency {
+  font-size: 18px;
+  color: #555;
+}
+
+.amount {
+  font-size: 28px;
+  font-weight: bold;
+  margin-left: 6px;
+  color: #4f46e5;
+}
+
+.pay-button {
+  width: 100%;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: #4f46e5;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.pay-button:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
+}
+
+.secure-text {
+  font-size: 12px;
+  color: #777;
+  margin-top: 15px;
+}
+
+/* subtle animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

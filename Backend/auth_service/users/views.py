@@ -19,6 +19,9 @@ class RegistrationView(APIView):
     def post(self,request):
         print(request.data)
         serializer=RegisterSerializer(data=request.data)
+        if not serializer.is_valid():
+            print("Serializer is not valid",serializer.errors)
+            return Response(serializer.errors, status=400)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         
@@ -32,29 +35,35 @@ class LoginView(APIView):
         serializer.is_valid(raise_exception=True)
         user=serializer.validated_data
         user=User.objects.get(id=user.id)
-        userjson=UserSerializer(user)
-        print(userjson.data)
+        if user:
+            userjson=UserSerializer(user)
+            print(userjson.data)
         
-        access_token,refresh_token=generate_tokens(user)
-        response=Response()
-        response.set_cookie(
-         key='access_token',
-         value=access_token,
-         httponly=True,
-         samesite='None',  # prevents CSRF
-         secure=True        # True if using HTTPS
-        )
-        response.set_cookie(
-         key='refresh_token',
-         value=refresh_token,
-         httponly=True,
-         samesite='None',  # prevents CSRF
-         secure=True        # True if using HTTPS
-        )
-        response.data={
+            access_token,refresh_token=generate_tokens(user)
+            response=Response()
+            response.set_cookie(
+             key='access_token',
+             value=access_token,
+             httponly=True,
+             samesite='None',  # prevents CSRF
+             secure=True        # True if using HTTPS
+             )
+            response.set_cookie(
+            key='refresh_token',
+            value=refresh_token,
+            httponly=True,
+            samesite='None',  # prevents CSRF
+            secure=True        # True if using HTTPS
+            )
+            response.data={
             'message':'Login successfully',
             'user':userjson.data
-        }
+            }
+        else:
+            print("USer not found")
+            response.data={
+                "message":"User not found"
+            }
         return response
 class UserView(APIView):
     permission_classes=[IsAuthenticated]

@@ -12,7 +12,7 @@ class DoctorModel(models.Model):
         ("offline", "Offline"),
         ("in_consultation", "In Consultation"),
        ]
-    user_id = models.UUIDField()
+    user_id = models.BigIntegerField(unique=True)
     speciality = models.TextField(default="nill", blank=True, null=True)
     license_no = models.CharField(blank=True, null=True)
     organization_name = models.TextField(default="nill", blank=True, null=True)

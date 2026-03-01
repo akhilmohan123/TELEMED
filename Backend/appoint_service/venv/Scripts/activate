@@ -37,7 +37,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="C:\users\user\Desktop\akhil\TELEMED\backend\appoint_service\venv"
+VIRTUAL_ENV="D:\TELEMED\Backend\appoint_service\venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"

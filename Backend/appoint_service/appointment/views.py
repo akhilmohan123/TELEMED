@@ -24,22 +24,29 @@ class Appointmentview(APIView):
             serializer=self.serializer_class(appointments)  
             return Response(serializer.data,status=status.HTTP_200_OK)
         else:
+            print("inside else block")
             user=self.request.user.id
-            print("user id is ====",user)
             user_data=get_user_details(user)
+            print("user data is ===",user_data)
             patient=get_patient_id_from_user(user)
-            doctor=get_doctor_id_from_user(user)
-            print("before the user_Data")
-            print(user_data['is_staff'])
+            #go withe patient id 
+            appontments_data=Appointmentmodel.objects.get(patient_id=patient)
+            print("the appointments data is ===",appontments_data.doctor_id)
+
+            print("patient data is ===",patient)
+            #doctor=get_doctor_id_from_user(user)
+            doctor=get_doctor_details(appontments_data.doctor_id)
+            
+            print("doctor data is ====",doctor)
+            print("staff status is ==",user_data['is_staff'])
             if user_data['is_staff']:
                 appointments=Appointmentmodel.objects.all()
             elif user_data['role']==2:
                 print("the role is ====2",doctor)
                 appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
             elif user_data['role']==1:
-                print("the role is 1 and patient id is ",patient)
                 appointments=Appointmentmodel.objects.filter(patient_id=patient)
-                print(appointments)
+                print("this is the appointments for patient",appointments)
                 serializer=self.serializer_class(appointments,many=True)
             return Response(serializer.data,status=status.HTTP_200_OK)
     def post(self,request,id):
@@ -94,11 +101,11 @@ class GetDoctorAppointment(APIView):
     permission_classes = [IsAuthenticated]
     authentication_classes = [JWTAuthentication]
 
+
     def get(self, request):
 
         try:
-            print("the view getdoctor appointmentis called ")
-            
+            print("the view getdoctor appointmentis called ")   
             user = request.user.id
             print("Authenticated user is ",user)
             doctor_id=get_doctor_id_from_user(user)
@@ -226,14 +233,18 @@ class GetReferAppointment(APIView):
         else:
             return Response({"message":"No Refer Found For this doctor"},status=status.HTTP_404_NOT_FOUND)
         
-class Appointmentmarkview:
-      permission_classes=[IsAuthenticated]
+class Appointmentmarkview(APIView):
+      permission_classes=[AllowAny]
       authentication_classes=[JWTAuthentication]
       def post(self,request,id):
           appointment=get_object_or_404(Appointmentmodel,id=id)
           if appointment:
               appointment.payment_status='paid'
+              print("Appoint marked as paid -----")
+              appointment.save()
               return Response({"message":"Appointment marked as paid"},status=status.HTTP_200_OK)
           else:
+              print("Appoint marked as pending -----")
               appointment.payment_status='pending'
+              appointment.save()
               return Response({"message":"Appointment not found"},status=status.HTTP_404_NOT_FOUND)

@@ -8,7 +8,7 @@ if defined _OLD_CODEPAGE (
     "%SystemRoot%\System32\chcp.com" 65001 > nul
 )
 
-set VIRTUAL_ENV=C:\users\user\Desktop\akhil\TELEMED\backend\appoint_service\venv
+set VIRTUAL_ENV=D:\TELEMED\Backend\appoint_service\venv
 
 if not defined PROMPT set PROMPT=$P$G
 

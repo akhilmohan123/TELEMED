@@ -21,7 +21,7 @@ import Resetpassword from './pages/user/Resetpassword';
 
 import { ToastContainer } from "react-toastify";
 import Payment from './pages/home/payment/Payment.js';
-
+import PaymentStatus from './pages/home/payment/PaymentStatus.js';
 function App() {
   return (
     <BrowserRouter>
@@ -46,7 +46,8 @@ function App() {
       <Route path='/get-refers' element={<Refer/>}/>
       <Route path='/reset-password/:token' element={<Resetpassword/>}></Route>
       <Route path='/payment/:id' element={<Payment/>}></Route>
-      
+       <Route path='/payment-status/:id' element={<PaymentStatus/>}>
+       </Route>
      
     </Routes>
           <ToastContainer

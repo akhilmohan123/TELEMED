@@ -12,6 +12,7 @@ class AppointmentSerializers(serializers.ModelSerializer):
     def get_doctor_name(self, obj):
         print("the doctor name method is called ")
         doctor_data = get_doctor_details(obj.doctor_id)
+        print("the doctor data is ",doctor_data)
         if doctor_data and doctor_data.get("user"):
            user_data = doctor_data.get('user')
            if user_data:

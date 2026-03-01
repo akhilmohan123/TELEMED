@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { appointment_api, payment_api } from "../../axios/axios";
-
+import { useNavigate } from "react-router-dom";
+import './Payment.css'
 function Payment() {
   const [data,setData]=useState(0);
   const { id } = useParams(); // appointment id
-  
+  const navigate=useNavigate();
   //function to get the order details 
 
   async function getOrderDetails() {
@@ -65,6 +66,7 @@ function Payment() {
     order_id: order.data.razorpay_order_id,
 
     handler: async function (response) {
+      try{
       console.log("Payment success:", response);
 
       await payment_api.post(
@@ -77,7 +79,10 @@ function Payment() {
         }
       );
 
-      alert("Payment Successful");
+      navigate(`/payment-status/${id}`);
+    }catch(error){
+      alert("Payment verification failed. Please try again later.")
+    }
     },
     theme: {
       color: "#3399cc",
@@ -89,11 +94,27 @@ function Payment() {
 };
 
   return (
-  <div style={{ textAlign: "center", marginTop: "50px" }}>
-    <h2>Complete Payment</h2>
-    <p>Appointment ID: {id}</p>
-    <button onClick={startPayment}>Pay {data} INR</button>
+<div className="payment-page">
+  <div className="payment-card">
+    <h2 className="payment-title">Complete Your Payment</h2>
+
+    <p className="payment-id">
+      Appointment ID: <span>{id}</span>
+    </p>
+
+    <div className="amount-box">
+      <span className="currency">₹</span>
+      <span className="amount">{data}</span>
+    </div>
+
+    <button className="pay-button" onClick={startPayment}>
+      Pay Now
+    </button>
+
+    <p className="secure-text">🔒 Secure payment powered by Razorpay</p>
   </div>
+</div>
+
   );
 }
 

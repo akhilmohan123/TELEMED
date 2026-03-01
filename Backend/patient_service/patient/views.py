@@ -25,7 +25,7 @@ class PatientProfileCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIV
         # If the instance exists, update the profile instead of creating a new one
         if instance:
             return self.update(request, *args, **kwargs)
-
+        print("user id is =====",request.user.id)
         # Otherwise, create a new profile
         serializer = self.get_serializer(data=request.data)
         print(serializer.is_valid())
@@ -73,7 +73,7 @@ class Getspeceficpatient(APIView):
     permission_classes=[AllowAny]
     def get(self,request,patient_id):
         try:
-            print("Called the specific patient view")
+            print("Called the specific patient view",patient_id)
             #fetch the seecific patient by id
             patient=PatientProfile.objects.get(id=patient_id)
             serializer=GetPatientProfileSerializer(patient)
@@ -94,11 +94,10 @@ class Getspecificpatientuser(APIView):
     def get(self, request, user_id):
         try:
             # Convert API input to integer, then to UUID
-            user_int = int(user_id)
-            user_uuid = uuid.UUID(int=user_int)
+    
 
             # Fetch the specific patient
-            patient = PatientProfile.objects.get(user=user_uuid)
+            patient = PatientProfile.objects.get(user=user_id)
             
             # Serialize and return
             serializer = GetPatientProfileSerializer(patient)
