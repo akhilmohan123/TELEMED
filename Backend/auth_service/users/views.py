@@ -29,59 +29,62 @@ class RegistrationView(APIView):
 @method_decorator(csrf_exempt, name='dispatch')
 class LoginView(APIView):
     permission_classes=[AllowAny]
-    def post(self,request):  
-        print("login view called")
-        serializer=LoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user=serializer.validated_data
-        user=User.objects.get(id=user.id)
-        if user:
-            userjson=UserSerializer(user)
-            print(userjson.data)
+    def post(self,request): 
+
+        try: 
+            print("login view called")
+            serializer=LoginSerializer(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            user=serializer.validated_data
+            user=User.objects.get(id=user.id)
+            if user:
+               userjson=UserSerializer(user)
+               print(userjson.data)
+               access_token,refresh_token=generate_tokens(user)
+               response=Response()
+               response.set_cookie(
+                key='access_token',
+                value=access_token,
+                httponly=True,
+                samesite='None',  # prevents CSRF
+                secure=True        # True if using HTTPS
+               )
+               response.set_cookie(
+               key='refresh_token',
+               value=refresh_token,
+               httponly=True,
+               samesite='None',  # prevents CSRF
+               secure=True        # True if using HTTPS
+              )
+               response.data={
+               'message':'Login successfully',
+               'user':userjson.data
+              }
+            else:
+                print("USer not found")
+                response.data={
+                "message":"User not found",
+                "status":404
+                }
+        except Exception as e:
+            print(f"An error occured during login:{e}")
+            response.data={
+                "message":"An error occured during login",
+                "status":500
+            }
         
-            access_token,refresh_token=generate_tokens(user)
-            response=Response()
-            response.set_cookie(
-             key='access_token',
-             value=access_token,
-             httponly=True,
-             samesite='None',  # prevents CSRF
-             secure=True        # True if using HTTPS
-             )
-            response.set_cookie(
-            key='refresh_token',
-            value=refresh_token,
-            httponly=True,
-            samesite='None',  # prevents CSRF
-            secure=True        # True if using HTTPS
-            )
-            response.data={
-            'message':'Login successfully',
-            'user':userjson.data
-            }
-        else:
-            print("USer not found")
-            response.data={
-                "message":"User not found"
-            }
+        
         return response
 class UserView(APIView):
     permission_classes=[IsAuthenticated]
-    def get(self, request):
-
-     
-        
+    def get(self, request):        
         # Print the token for debugging
-
         try: 
             # Decode the JWT token
-        
             user=request.user
             # Serialize the user data
             serializer = UserSerializer(user)
-            
             return Response(serializer.data)
-        
         except jwt.ExpiredSignatureError:
             raise AuthenticationFailed("Token has expired")
         except jwt.InvalidTokenError:
@@ -96,11 +99,15 @@ class LogoutView(APIView):
     permission_classes=[AllowAny]
     
     def post(self,request):
-         response=Response({
+         try:  
+            response=Response({
             "message":"Logout successfully"
-         })
-         response.delete_cookie('access_token')
-         response.delete_cookie('refresh_token')
+            })
+            response.delete_cookie('access_token')
+            response.delete_cookie('refresh_token')
+         except Exception as e:
+            print(f"An error occured during logout: {e}")
+            raise AuthenticationFailed("An error occured during logout")
 
          return response
 

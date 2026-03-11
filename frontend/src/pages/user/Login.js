@@ -77,7 +77,7 @@ catch (error) {
       console.log("Invalid email format");
       toast.error("Invalid email format");
     }
-    else {
+    else if(error.response.status === 500){
       console.log("Server Error:", error.response.status);
       toast.error("Server Error. Please try again later.");
     }

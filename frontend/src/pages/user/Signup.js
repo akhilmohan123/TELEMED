@@ -3,6 +3,7 @@ import {MDBContainer, MDBCol, MDBRow, MDBBtn, MDBIcon, MDBInput, MDBCheckbox } f
 import axios, { auth_api } from '../axios/axios';
 import axiosconfig from '../axios/axios';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Signup() {
     const[data,Setdata]=useState({Username:"",First_Name:"",Last_Name:"",Password:"",Email:"",role:null})
@@ -36,7 +37,7 @@ function Signup() {
             })
         } catch (error) {
             console.log(error)
-            alert("Error during registration. Please try again.")
+            toast.error(error.response.data.message || "Registration failed")
         }
     }
     

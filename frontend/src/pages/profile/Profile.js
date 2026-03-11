@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axiosconfig, { auth_api } from '../axios/axios';
 import Navbar from '../home/Navbar';
+import { toast } from 'react-toastify';
 
 
 
@@ -18,6 +19,10 @@ const Profile = () => {
       console.log(res.data)
     }).catch(error => {
       console.error("Error fetching user data:", error);
+      if(error.response && error.response.status ===401)
+      {
+        toast.error("Unauthorized access.Please login again !.")
+      }
     });
   }, []);
 
