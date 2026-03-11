@@ -33,14 +33,25 @@ export default function Navbar() {
     navigate("/login");
   }, 300);
   }
-  function handledoctors(){
-    if(location.pathname !=='/'){
-     window.location.href='/user#section1'
-    }else {
-      // If you're already on the /user page, scroll smoothly to the Doctors section
-      document.getElementById('section1').scrollIntoView({ behavior: 'smooth' });
+function handledoctors(){
+
+  if(location.pathname !== '/user'){
+    navigate('/user')
+    setTimeout(()=>{
+      document.getElementById("section1")?.scrollIntoView({
+        behavior:"smooth"
+      })
+    },200)
+
+  }else{
+
+    document.getElementById("section1")?.scrollIntoView({
+      behavior:"smooth"
+    })
+
   }
-  }
+
+}
   
   return (
   <>
@@ -103,7 +114,7 @@ export default function Navbar() {
               </MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
-              <MDBNavbarLink as={Link} href='#section1'onClick={handledoctors} >Doctors</MDBNavbarLink>
+              <MDBNavbarLink onClick={handledoctors} style={{cursor:"pointer"}}>Doctors</MDBNavbarLink>
             </MDBNavbarItem>
             <MDBNavbarItem>
               <MDBNavbarLink href='/profile'>Profile</MDBNavbarLink>
