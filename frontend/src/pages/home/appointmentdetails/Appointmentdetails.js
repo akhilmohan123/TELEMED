@@ -22,6 +22,13 @@ function Appointmentdetails() {
     }
        getappointmentDetails()
     },[])
+
+
+    useEffect(()=>{
+      if(data){
+        console.log("the appointments data in the appointment details page is ===",data)
+      }
+    },[data])
   
     function handleremove(id){
       appointment_api.delete(`appointmentdelete/${id}`).then(res=>{
@@ -29,10 +36,18 @@ function Appointmentdetails() {
       })
     
     }
-    function handleVideocall(id,ref){
-    
-      navigate(`/video-call/${id}/${ref}`)
+    function handleVideocall(data){
+      let paymentStatus=data.payment_status
+      if(paymentStatus!=="paid"){
+        toast.warning("Please complete the payment before joining the video call.")
+        navigate(`/payment/${data.id}`)
+      }else{
+        let id=data.id
+        let ref=data.referrence_no
+        navigate(`/video-call/${id}/${ref}`)
+      }
     }
+
   return (
     <div>
      <Navbar/>
@@ -54,7 +69,7 @@ function Appointmentdetails() {
 
 <tr>  
       <th scope="row">{index+1}</th>
-      <td style={{cursor:'pointer'}} onClick={()=>handleVideocall(d.id,d.referrence_no)}>{d.doctor_name}</td>
+      <td style={{cursor:'pointer'}} onClick={()=>handleVideocall(d)}>{d.doctor_name}</td>
       <td>{d.date}</td>
       <td>{d.time}</td>
       <td>{d.referrence_no

@@ -32,66 +32,72 @@ class Appointmentview(APIView):
                 print("user data is ===",user_data)
                 patient=get_patient_id_from_user(user)
             #go withe patient id 
-                appontments_data=Appointmentmodel.objects.get(patient_id=patient)
-                print("the appointments data is ===",appontments_data.doctor_id)
+                appontments_data = Appointmentmodel.objects.filter(patient_id=patient).first()
+                print(("the appointments data is ===",appontments_data))
+                if not appontments_data:
+                    print("no appointments data found for the patient")
+                if appontments_data:
+                    print("the appointments data is ===",appontments_data.doctor_id)
 
-                print("patient data is ===",patient)
-            #doctor=get_doctor_id_from_user(user)
-                doctor=get_doctor_details(appontments_data.doctor_id)
+                    print("patient data is ===",patient)
+                    #doctor=get_doctor_id_from_user(user)
+                    doctor=get_doctor_details(appontments_data.doctor_id)
             
-                print("doctor data is ====",doctor)
-                print("staff status is ==",user_data['is_staff'])
-                if user_data['is_staff']:
-                    appointments=Appointmentmodel.objects.all()
-                elif user_data['role']==2:
-                    print("the role is ====2",doctor)
-                    appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
-                elif user_data['role']==1:
-                    appointments=Appointmentmodel.objects.filter(patient_id=patient)
-                    print("this is the appointments for patient",appointments)
-                    serializer=self.serializer_class(appointments,many=True)
-                return Response(serializer.data,status=status.HTTP_200_OK)
+                    print("doctor data is ====",doctor)
+                    print("staff status is ==",user_data['is_staff'])
+                    if user_data['is_staff']:
+                        appointments=Appointmentmodel.objects.all()
+                    elif user_data['role']==2:
+                        print("the role is ====2",doctor)
+                        appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
+                    elif user_data['role']==1:
+                        appointments=Appointmentmodel.objects.filter(patient_id=patient)
+                        print("this is the appointments for patient",appointments)
+                        serializer=self.serializer_class(appointments,many=True)
+                    print("serializer data is ===",serializer.data)
+                    return Response(serializer.data,status=status.HTTP_200_OK)
+
+        def post(self,request,id):
+            doctor = get_doctor_details(id)
+            print("doctor is =======",doctor)
+            if doctor['available_status'] in ('available','Available'):
+                print("doctor status is available")
+
+                data=request.data.copy()
+                data['doctor_id']=doctor['id']
+                print("amount is ======before",data['amount'])
+                data['amount']=doctor['amount']
+                print("amount is ======after",data['amount'])
+                serializer=self.serializer_class(data=data)
+                doctor_status=change_doctor_status(doctor['id'])
+                print("doctor status is =========",doctor_status)    
+                if serializer.is_valid() and doctor_status:
+                    print("serializer is valid before the save")
+                    print("the user id is ====",request.user.id)
+                    patient_id=get_patient_id_from_user(request.user.id)
+                    print("the patient id is =====",patient_id)
+                    serializer.save(patient_id=patient_id)
+                    print(serializer.data)
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                else:
+                    print("serializer is not valid")
+                    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            else:
+                print("in else condition ")
+                return Response({"message": "Doctor is not available"}, status=status.HTTP_400_BAD_REQUEST)
+
+        def update(self,request,*args,**kwargs):
+            instance=self.get_object()
+            serializer=self.serializer_class(instance=instance,data=request.data)
+            if serializer.is_valid():
+               serializer.save()
+            
+               return Response(data=serializer.data,status=status.HTTP_201_CREATED)
+            else:
+              return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     except jwt.ExpiredSignatureError as e:
         print(f"Error expired token: {e}")
         raise AuthenticationFailed("Token has expired")
-    def post(self,request,id):
-        doctor = get_doctor_details(id)
-        print("doctor is =======",doctor)
-        if doctor['available_status'] in ('available','Available'):
-            print("doctor status is available")
-
-            data=request.data.copy()
-            data['doctor_id']=doctor['id']
-            print("amount is ======before",data['amount'])
-            data['amount']=doctor['amount']
-            print("amount is ======after",data['amount'])
-            serializer=self.serializer_class(data=data)
-            doctor_status=change_doctor_status(doctor['id'])
-            print("doctor status is =========",doctor_status)    
-            if serializer.is_valid() and doctor_status:
-                print("serializer is valid before the save")
-                print("the user id is ====",request.user.id)
-                patient_id=get_patient_id_from_user(request.user.id)
-                print("the patient id is =====",patient_id)
-                serializer.save(patient_id=patient_id)
-                print(serializer.data)
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
-            else:
-                print("serializer is not valid")
-                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        else:
-            print("in else condition ")
-            return Response({"message": "Doctor is not available"}, status=status.HTTP_400_BAD_REQUEST)
-
-    def update(self,request,*args,**kwargs):
-        instance=self.get_object()
-        serializer=self.serializer_class(instance=instance,data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            
-            return Response(data=serializer.data,status=status.HTTP_201_CREATED)
-        else:
-            return Response(data=serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
 class DeleteAppointment(APIView):
     permission_classes=[AllowAny]

@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { appointment_api, payment_api } from "../../axios/axios";
 import { useNavigate } from "react-router-dom";
 import './Payment.css'
+import { toast } from "react-toastify";
 function Payment() {
   const [data,setData]=useState(0);
   const { id } = useParams(); // appointment id
@@ -81,7 +82,7 @@ function Payment() {
 
       navigate(`/payment-status/${id}`);
     }catch(error){
-      alert("Payment verification failed. Please try again later.")
+      toast.error("Payment verification failed. Please try again later.")
     }
     },
     theme: {
