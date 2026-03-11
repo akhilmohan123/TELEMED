@@ -14,41 +14,46 @@ import jwt
 from rest_framework.exceptions import AuthenticationFailed
 # Create your views here.
 class Appointmentview(APIView):
-    serializer_class=AppointmentSerializers
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication]
-    def get(self,request,id=None,*args,**kwargs):
-        if id:
-            #return the amount details 
-            appointments=get_object_or_404(Appointmentmodel,id=id)
-            serializer=self.serializer_class(appointments)  
-            return Response(serializer.data,status=status.HTTP_200_OK)
-        else:
-            print("inside else block")
-            user=self.request.user.id
-            user_data=get_user_details(user)
-            print("user data is ===",user_data)
-            patient=get_patient_id_from_user(user)
-            #go withe patient id 
-            appontments_data=Appointmentmodel.objects.get(patient_id=patient)
-            print("the appointments data is ===",appontments_data.doctor_id)
+    try:
+        serializer_class=AppointmentSerializers
+        permission_classes = [IsAuthenticated]
+        authentication_classes = [JWTAuthentication]
 
-            print("patient data is ===",patient)
+        def get(self,request,id=None,*args,**kwargs):
+            if id:
+            #return the amount details 
+                appointments=get_object_or_404(Appointmentmodel,id=id)
+                serializer=self.serializer_class(appointments)  
+                return Response(serializer.data,status=status.HTTP_200_OK)
+            else:
+                print("inside else block")
+                user=self.request.user.id
+                user_data=get_user_details(user)
+                print("user data is ===",user_data)
+                patient=get_patient_id_from_user(user)
+            #go withe patient id 
+                appontments_data=Appointmentmodel.objects.get(patient_id=patient)
+                print("the appointments data is ===",appontments_data.doctor_id)
+
+                print("patient data is ===",patient)
             #doctor=get_doctor_id_from_user(user)
-            doctor=get_doctor_details(appontments_data.doctor_id)
+                doctor=get_doctor_details(appontments_data.doctor_id)
             
-            print("doctor data is ====",doctor)
-            print("staff status is ==",user_data['is_staff'])
-            if user_data['is_staff']:
-                appointments=Appointmentmodel.objects.all()
-            elif user_data['role']==2:
-                print("the role is ====2",doctor)
-                appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
-            elif user_data['role']==1:
-                appointments=Appointmentmodel.objects.filter(patient_id=patient)
-                print("this is the appointments for patient",appointments)
-                serializer=self.serializer_class(appointments,many=True)
-            return Response(serializer.data,status=status.HTTP_200_OK)
+                print("doctor data is ====",doctor)
+                print("staff status is ==",user_data['is_staff'])
+                if user_data['is_staff']:
+                    appointments=Appointmentmodel.objects.all()
+                elif user_data['role']==2:
+                    print("the role is ====2",doctor)
+                    appointments=Appointmentmodel.objects.filter(doctor_id=doctor)
+                elif user_data['role']==1:
+                    appointments=Appointmentmodel.objects.filter(patient_id=patient)
+                    print("this is the appointments for patient",appointments)
+                    serializer=self.serializer_class(appointments,many=True)
+                return Response(serializer.data,status=status.HTTP_200_OK)
+    except jwt.ExpiredSignatureError as e:
+        print(f"Error expired token: {e}")
+        raise AuthenticationFailed("Token has expired")
     def post(self,request,id):
         doctor = get_doctor_details(id)
         print("doctor is =======",doctor)

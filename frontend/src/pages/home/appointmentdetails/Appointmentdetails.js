@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Navbar from '../Navbar'
 import axiosconfig, { appointment_api } from '../../axios/axios'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 function Appointmentdetails() {
     const [data,Setdata]=useState()
@@ -15,6 +16,8 @@ function Appointmentdetails() {
         }).then((res)=>{
             console.log(res)
             Setdata(res.data)
+        }).catch((err)=>{
+          toast.error(err.response.data.message || "Failed to fetch appointments")
         })
     }
        getappointmentDetails()
