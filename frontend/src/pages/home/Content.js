@@ -9,13 +9,11 @@ function Content() {
 
   return (
     <div>
-<Header />
-      
-    
-       
-         
+      <Header />       
       <Doctorsection/>
-      <About/>
+      <div style={{marginTop:"60px"}}>
+        <About/>
+      </div>
     </div>
      
         

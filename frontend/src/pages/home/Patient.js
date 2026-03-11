@@ -15,7 +15,7 @@ function Patient() {
     // }, [token, navigate]);
   return (
     <div>
-        <><Navbar/> <Content/></>
+        <><Navbar/> <div style={{marginTop:"60px"}}><Content/></div></>
       
     </div>
   )
