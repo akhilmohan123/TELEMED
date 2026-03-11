@@ -8,8 +8,9 @@ function DoctorProfile() {
     const[availablity,Setavailability]=useState()
     const[fileimage,Setfileimage]=useState(null)
     const[profilepic,Setprofilepic]=useState()
-    const token=localStorage.getItem("token")
-    const baseURL="http://127.0.0.1:8000/"
+    const [imageURL,setimageURL]=useState()
+    //const token=localStorage.getItem("token")
+    const baseURL="/media"
     useEffect(()=>{
     doctor_api.get("get-doctor",{
        withCredentials:true
@@ -30,6 +31,12 @@ function DoctorProfile() {
                }
 
             )
+            if(res.data.image){
+                 setimageURL(res.data.image)
+            }else{
+                    setimageURL("http://bootdey.com/img/Content/avatar/avatar1.png")
+            }
+    
         }
     }).catch(err=>{
         Setuser(
@@ -46,8 +53,12 @@ function DoctorProfile() {
         )
         Setavailability('')
     })
-    },[])
-    const imageURL = profilepic ? `${baseURL}${profilepic}` : "http://bootdey.com/img/Content/avatar/avatar1.png"; // Default image if no image is available
+    },[user])
+
+    useEffect(()=>{
+        console.log("image url is ------"+imageURL)
+    },[imageURL])
+    //const imageURL = profilepic ? `${baseURL}${profilepic}` : "http://bootdey.com/img/Content/avatar/avatar1.png"; // Default image if no image is available
     function handlechange(e){
         const {name,value}=e.target
         Setuser((prevvalue)=>({...prevvalue,[name]:value}))

@@ -16,7 +16,7 @@ import {
 function Content() {
 
   const [doctor, setDoctor] = useState([]);
-  const baseURL = "http://127.0.0.1:8000/";
+  //const baseURL = "http://127.0.0.1:8000/";
 
   useEffect(() => {
     getAlldoctors()
@@ -66,7 +66,7 @@ function Content() {
                     <div className="mb-3">
 
                       <MDBCardImage
-                        src={`${baseURL}${data.image}`}
+                        src={`${data.image}`}
                         alt="doctor"
                         className="rounded-circle shadow"
                         style={{
