@@ -1,3 +1,5 @@
 .env
 keys/
 /frontend/.env
+/Backend/HospitalManagement
+/Backend/doctor_service/media
