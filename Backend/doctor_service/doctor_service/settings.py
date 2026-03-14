@@ -35,11 +35,12 @@ PUBLIC_KEY_PATH = os.path.join(KEYS_DIR, "public.pem")
 SECRET_KEY = "django-insecure-ie##4ua$&59i@po-uhv0q#^$6kyms43%ood)86cdea)awq!sz!"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Base url to serve media files
 MEDIA_URL = '/media/'
 # Path where media is stored

@@ -30,9 +30,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-emoeo=656bbt=wm)9qrdxwh-4_ekq+&)upb=$^gz4c)xouzhe7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -176,6 +176,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 # Base url to serve media files
 MEDIA_URL = '/media/'
 # Path where media is stored
@@ -184,7 +185,7 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-ASGI_APPLICATION="media_serive.asgi.application"
+ASGI_APPLICATION = "media_serive.asgi.application"
 CHANNEL_LAYERS={
     "default":{
         "BACKEND":"channels.layers.InMemoryChannelLayer"

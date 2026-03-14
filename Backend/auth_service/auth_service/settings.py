@@ -33,9 +33,9 @@ PUBLIC_KEY_PATH = os.path.join(KEYS_DIR, "public.pem")
 SECRET_KEY = "django-insecure-mepkwhvy!@ienxox4k4y+*h$s0)vi+u3vo$0a_vj52(7252-@5"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -175,6 +175,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
 STATIC_URL = "static/"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
