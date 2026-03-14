@@ -2,7 +2,8 @@ import React, {  useEffect, useRef, useState } from 'react'
 import './VideoCall.css'
 import MedicineDetails from './MedicineDetails';
 import { useParams } from 'react-router-dom';
-import {toast} from 'react-toastify'
+import {toast} from 'react-toastify';
+import { appointment_api, auth_api } from '../../axios/axios';
 function Videocall() {
  const [username,SetUsername]=useState('')
  const[roomId,Setroomid]=useState()
@@ -10,16 +11,33 @@ function Videocall() {
   const[flag,Setflag]=useState(false)
   const[localstream,Setlocalstream]=useState(null)
   const [peerUsername, setPeerUsername] = useState('');
+  const [data,setData]=useState(null)
   const localVideoref=useRef(null)
   const peerConnection=useRef(null)
   const Datachannel=useRef(null)
   const offerref=useRef(null)
   const peeraMap=useRef({})
   const localstreamref=useRef(null)
- const role=localStorage.getItem('role')
+ //const role=localStorage.getItem('role')
  
 
  const {id,ref} =useParams()
+
+ async function getUserdata(){
+  await auth_api.get('user',{
+    withCredentials:true
+  }).then((data)=>{
+    setData(data.data)
+  }).catch((err)=>{
+    toast.error(err.response.data.message || "Failed to fetch user data")
+  })
+
+ }
+
+ useEffect(()=>{
+    getUserdata();
+ },[])
+
 useEffect(()=>{
   Setroomid(ref)
 },[ref])
@@ -53,7 +71,7 @@ useEffect(()=>{
   function handlejoin(){
    
    Setflag(true)
-   var endpoint = `ws://127.0.0.1:8004/ws/chat/${roomId}/`;
+   var endpoint = `ws://localhost/ws/chat/${roomId}/`;
    webSocket.current=new WebSocket(endpoint);
    webSocket.current.addEventListener('open',async(e)=>{
     console.log("Connection opened !")
@@ -232,11 +250,21 @@ useEffect(()=>{
       console.log("Local stream is not available.");
     }
   }
-  function handleClose(){
+  async function handleClose(){
     if(peerConnection.current){
       peerConnection.current.close()
       peerConnection.current=null
       localVideoref.current.srcObject=null
+      try{
+
+        await appointment_api.post(`appointment-mark-status/${id}`).then((res)=>{
+          console.log(res.data)
+        })
+      }catch(error)
+      {
+        toast.error("Something went wrong!")
+      }
+      
       
     }
     
@@ -256,7 +284,7 @@ useEffect(()=>{
   )}
 
   <div className="row" id='medicineid'>
-    {role == 2 ? (
+    {data && data.role == 2 ? (
       <div className="col-md-3" id="medsecond">
         <div className="medicine-form small-form">
           <MedicineDetails  id={id}/>
@@ -265,7 +293,7 @@ useEffect(()=>{
     ) : null}
 
     {/* Video call section */}
-    <div className={role == 2 ? "col-md-9" : "col-md-12"} >
+    <div className={data && data.role == 2 ? "col-md-9" : "col-md-12"} >
       <div id="video-container" className="video-section">
   <div className="video-wrapper" id="main-video-wrapper">
     {/* remote videos will be added here dynamically */}
@@ -278,7 +306,11 @@ useEffect(()=>{
           <button id="btn-toggle-video" onClick={toggleVideo} className='btn btn-danger'>
             Video Off
           </button>
-          <button className='btn btn-danger' onClick={handleClose}>Close</button>
+          {data?.role === 2 && (
+          <button className='btn btn-danger' onClick={handleClose}>
+            Close
+          </button>
+        )}
         </div>
       </div>
     </div>

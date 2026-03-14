@@ -12,7 +12,7 @@ import {
   MDBTypography,
   MDBIcon
 } from 'mdb-react-ui-kit';
-
+import {toast} from 'react-toastify';
 function Content() {
 
   const [doctor, setDoctor] = useState([]);
@@ -27,6 +27,8 @@ function Content() {
       withCredentials: true
     }).then((res) => {
       setDoctor(res.data);
+    }).catch((err)=>{
+      toast.error("Something went wrong please login again and try again")
     })
   }
 

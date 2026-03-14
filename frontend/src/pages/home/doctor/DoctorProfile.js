@@ -53,7 +53,7 @@ function DoctorProfile() {
         )
         Setavailability('')
     })
-    },[user])
+    },[])
 
     useEffect(()=>{
         console.log("image url is ------"+imageURL)

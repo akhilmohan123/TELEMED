@@ -38,10 +38,14 @@ function Appointmentdetails() {
     }
     function handleVideocall(data){
       let paymentStatus=data.payment_status
+      let appoint_Status=data.status
       if(paymentStatus!=="paid"){
         toast.warning("Please complete the payment before joining the video call.")
         navigate(`/payment/${data.id}`)
-      }else{
+      } else if(appoint_Status=== "completed"){
+        toast.info("This appointment has already been completed and cannot be joined for a video call .")
+      }
+      else{
         let id=data.id
         let ref=data.referrence_no
         navigate(`/video-call/${id}/${ref}`)

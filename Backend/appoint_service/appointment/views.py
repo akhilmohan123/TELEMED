@@ -259,3 +259,24 @@ class Appointmentmarkview(APIView):
               appointment.payment_status='pending'
               appointment.save()
               return Response({"message":"Appointment not found"},status=status.HTTP_404_NOT_FOUND)
+
+
+
+class AppointmentStatusmarkview(APIView):
+      permission_classes=[IsAuthenticated]
+      authentication_classes=[JWTAuthentication]
+      def post(self,request,id):
+          try:
+              appointment=get_object_or_404(Appointmentmodel,id=id)
+              if appointment:
+                 appointment.status='completed'
+                 print("Appoint marked as completed -----")
+                 appointment.save()
+                 return Response({"message":"Appointment marked as completed"},status=status.HTTP_200_OK)
+              else:
+                 print("Appoint marked as pending -----")
+                 appointment.payment_status='pending'
+                 appointment.save()
+                 return Response({"message":"Appointment not found"},status=status.HTTP_404_NOT_FOUND)
+          except Exception as e:
+              return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
