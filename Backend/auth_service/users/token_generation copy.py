@@ -33,11 +33,11 @@ else:
 
 
 # Read key files
+with open(secret_path_private, "r") as f:
+    private_key = f.read()
 
-private_key = os.getenv("PRIVATE_KEY")
-
-
-public_key = os.getenv("PUBLIC_KEY")
+with open(secret_path_public, "r") as f:
+    public_key = f.read()
 def generate_tokens(user):
     print("private key is ====",private_key)
     access_payload={
