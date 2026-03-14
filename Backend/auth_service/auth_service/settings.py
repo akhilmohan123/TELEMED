@@ -89,7 +89,7 @@ WSGI_APPLICATION = "auth_service.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-if ENVIRONMENT == 'production':
+if ENVIRONMENT == 'production' or ENVIRONMENT=="render":
     DATABASE_URL = os.getenv('DATABASE_URL')
     url = urlparse(DATABASE_URL)
     DATABASES = {

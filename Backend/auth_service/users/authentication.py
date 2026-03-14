@@ -15,14 +15,23 @@ print(f"ENVIRONMENT = {ENVIRONMENT}")
 
 
 # Load correct key path based on environment
-if ENVIRONMENT == "production":
+if ENVIRONMENT == "render":
 
-    secret_path_private = f"/app/keys/private.pem"
-    secret_path_public =  f"/app/keys/public.pem"
-    print(f"🔑 Loaded secret key from: {secret_path_private} and {secret_path_public}")
+    secret_path_private = "keys/private.pem"
+    secret_path_public = "keys/public.pem"
+
+    print(f"🔑 Render keys loaded from: {secret_path_private} and {secret_path_public}")
+
+elif ENVIRONMENT == "production":   # Docker case
+
+    secret_path_private = "/app/keys/private.pem"
+    secret_path_public = "/app/keys/public.pem"
+
+    print(f"🔑 Docker keys loaded from: {secret_path_private} and {secret_path_public}")
 
 else:
     print("🔧 Loading development private/public keys")
+
     SERVICE_BASE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     PROJECT_ROOT = os.path.dirname(SERVICE_BASE)
     KEYS_DIR = os.path.join(PROJECT_ROOT, "keys")
