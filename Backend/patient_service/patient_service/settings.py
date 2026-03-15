@@ -113,7 +113,7 @@ CSRF_COOKIE_SECURE = False
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 print("Environemnt is ===", ENVIRONMENT)
-if ENVIRONMENT == 'production':
+if ENVIRONMENT == 'production' or ENVIRONMENT=='render':
     DATABASE_URL = os.getenv('DATABASE_URL')
     url = urlparse(DATABASE_URL)
     DATABASES = {

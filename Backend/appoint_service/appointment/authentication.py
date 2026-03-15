@@ -28,11 +28,11 @@ else:
 
 
 # Read key files
-with open(secret_path_private, "r") as f:
-    private_key = f.read()
 
-with open(secret_path_public, "r") as f:
-    public_key = f.read()
+private_key = f.read()
+
+
+public_key = os.getenv("PUBLIC_KEY")
 User = get_user_model()
 class AuthServiceUser:
     """

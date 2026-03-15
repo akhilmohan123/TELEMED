@@ -133,7 +133,7 @@ CSRF_COOKIE_SECURE = False
 
 print("Environemnt is ===", ENVIRONMENT)
 
-if ENVIRONMENT == 'production':
+if ENVIRONMENT == 'production' or ENVIRONMENT=='render':
 
     DATABASE_URL = os.getenv('DATABASE_URL')
 
