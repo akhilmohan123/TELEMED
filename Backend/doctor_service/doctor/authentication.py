@@ -41,7 +41,7 @@ def load_secret_file(filename):
 
 
 # Load public key (automatically detects environment)
-PUBLIC_KEY = load_secret_file('public.pem')
+PUBLIC_KEY = os.getenv("PUBLIC_KEY")
 
 User = get_user_model()
 
