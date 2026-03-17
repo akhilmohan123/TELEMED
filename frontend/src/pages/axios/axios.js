@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { attachAuthInterceptors } from './interceptors';
-const REACT_APP_AUTH_BASEURL = import.meta.env.REACT_APP_AUTH_BASEURL || "http://localhost";
-const REACT_APP_DOCTOR_BASEURL = import.meta.env.REACT_APP_DOCTOR_BASEURL || "http://localhost";
-const REACT_APP_PATIENT_BASEURL = import.meta.env.REACT_APP_PATIENT_BASEURL || "http://localhost";
-const REACT_APP_APPOINT_BASEURL = import.meta.env.REACT_APP_APPOINT_BASEURL || "http://localhost";
-const REACT_APP_MEDIA_BASEURL = import.meta.env.REACT_APP_MEDIA_BASEURL || "http://localhost";
-const REACT_APP_PAYMENT_BASEURL = import.meta.env.REACT_APP_PAYMENT_BASEURL || "http://localhost";
+const REACT_APP_AUTH_BASEURL = process.env.REACT_APP_AUTH_BASEURL || "http://localhost";
+const REACT_APP_DOCTOR_BASEURL = process.env.REACT_APP_DOCTOR_BASEURL || "http://localhost";
+const REACT_APP_PATIENT_BASEURL = process.env.REACT_APP_PATIENT_BASEURL || "http://localhost";
+const REACT_APP_APPOINT_BASEURL = process.env.REACT_APP_APPOINT_BASEURL || "http://localhost";
+const REACT_APP_MEDIA_BASEURL = process.env.REACT_APP_MEDIA_BASEURL || "http://localhost";
+const REACT_APP_PAYMENT_BASEURL = process.env.REACT_APP_PAYMENT_BASEURL || "http://localhost";
 // Auth API
 export const auth_api = axios.create({
     baseURL: `${REACT_APP_AUTH_BASEURL}/users/api`
