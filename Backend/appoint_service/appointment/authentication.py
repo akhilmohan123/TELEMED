@@ -29,7 +29,6 @@ else:
 
 # Read key files
 
-private_key = f.read()
 
 
 public_key = os.getenv("PUBLIC_KEY")
