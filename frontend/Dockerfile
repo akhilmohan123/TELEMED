@@ -2,14 +2,14 @@
 FROM node:18 AS build
 WORKDIR /app
 
-# Copy package.json and package-lock.json
-COPY package*.json ./
+# Copy package.json and package-lock.json from frontend
+COPY frontend/package*.json ./
 
 # Install dependencies
 RUN npm install
 
-# Copy all React files
-COPY . .
+# Copy all frontend files
+COPY frontend/. ./
 
 # Build for production
 RUN npm run build
