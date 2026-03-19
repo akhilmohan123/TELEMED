@@ -34,7 +34,7 @@ class PatientProfileCreateUpdateView(generics.CreateAPIView, generics.UpdateAPIV
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             print(serializer.errors)
-        # return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def perform_create(self, serializer):
         print(serializer)
@@ -67,6 +67,7 @@ class GetprofilePatient(APIView):
         except jwt.DecodeError:
             raise AuthenticationFailed("Invalid token")
         except Exception as e:
+            print("ERROR IN GETPROFILE:", str(e))
             return Response({"error": str(e)}, status=500)
         
 class Getspeceficpatient(APIView):
