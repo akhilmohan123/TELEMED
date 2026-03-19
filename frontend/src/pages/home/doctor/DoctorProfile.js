@@ -10,7 +10,7 @@ function DoctorProfile() {
     const[profilepic,Setprofilepic]=useState()
     const [imageURL,setimageURL]=useState()
     //const token=localStorage.getItem("token")
-    const baseURL="/media"
+    const baseURL=process.env.REACT_APP_AUTH_BASEURL
     useEffect(()=>{
     doctor_api.get("get-doctor",{
        withCredentials:true
@@ -31,10 +31,11 @@ function DoctorProfile() {
                }
 
             )
-            if(res.data.image){
-                 setimageURL(res.data.image)
+        if(res.data.image){
+            console.log("image is from backend ===="+res.data.image)
+            setimageURL(`${baseURL}${res.data.image}`)
             }else{
-                    setimageURL("http://bootdey.com/img/Content/avatar/avatar1.png")
+            setimageURL("http://bootdey.com/img/Content/avatar/avatar1.png")
             }
     
         }
