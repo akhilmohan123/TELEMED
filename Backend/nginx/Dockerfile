@@ -1,13 +1,5 @@
-FROM nginx:alpine
-
-# Remove default config
-RUN rm /etc/nginx/conf.d/default.conf
-
-# Copy your nginx config
+FROM nginx:latest
+COPY build/ /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
-
-# Expose port
 EXPOSE 80
-
-# Start nginx
 CMD ["nginx", "-g", "daemon off;"]
