@@ -18,6 +18,7 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
+URL = os.getenv("URL")
 class DoctorCreateView(generics.CreateAPIView, generics.UpdateAPIView):
     serializer_class = DoctorCreateSerializer
     permission_classes = [IsAuthenticated]
@@ -95,8 +96,8 @@ class GetAllDoctors(APIView):
             doctor_data = GetAllDoctorsSerializers(doctors, many=True).data
 
             # 2️ Fetch all users from Auth Service
-            if ENVIRONMENT == 'production':
-                auth_service_url = "http://user-service:8000/users/api/users"
+            if ENVIRONMENT == 'production' or ENVIRONMENT =="render":
+                auth_service_url = f'{URL}/users/api/users'
             else:
                 auth_service_url = "http://127.0.0.1:8000/users/api/users"
             response = requests.get(auth_service_url)
