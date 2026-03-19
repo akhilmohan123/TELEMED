@@ -9,5 +9,8 @@ FROM nginx:latest
 COPY --from=build /app/build /usr/share/nginx/html
 RUN rm /etc/nginx/conf.d/default.conf
 COPY nginx.conf /etc/nginx/conf.d/app.conf
+RUN echo "CACHE BUST 1"
+RUN cat /etc/nginx/conf.d/app.conf
+RUN ls /usr/share/nginx/html
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
