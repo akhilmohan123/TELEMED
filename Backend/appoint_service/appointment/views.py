@@ -280,7 +280,7 @@ class AppointmentStatusmarkview(APIView):
               return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
           
 
-class AppointPing:
+class AppointPing(APIView):
     def get(self):
         try:
             print("Ping !!")

@@ -108,7 +108,7 @@ class Getspecificpatientuser(APIView):
             return Response({"error": "Patient profile not found"}, status=status.HTTP_404_NOT_FOUND)
         except ValueError:
             return Response({"error": "Invalid user ID"}, status=status.HTTP_400_BAD_REQUEST)
-class PatientPing:
+class PatientPing(APIView):
     def get(self):
         try:
             print("Ping !!")

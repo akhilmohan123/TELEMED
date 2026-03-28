@@ -233,7 +233,7 @@ class CheckPaymentstatusview(APIView):
             )
 
 
-class PaymentPing:
+class PaymentPing(APIView):
     def get(self):
         try:
             print("Ping !!")

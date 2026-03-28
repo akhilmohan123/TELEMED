@@ -8,7 +8,7 @@ from rest_framework import status
 class Video_Call_View:
     pass
 
-class Videoping:
+class Videoping(APIView):
     def get(self):
         try:
             print("Ping !!")

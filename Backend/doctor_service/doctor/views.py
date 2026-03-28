@@ -176,7 +176,7 @@ class ChangeDoctorstatus(APIView):
             return Response({"error":str(e)},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 
-class DoctorPing:
+class DoctorPing(APIView):
     def get(self):
         try:
             print("Ping !!")

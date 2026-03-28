@@ -209,7 +209,7 @@ class Checkschemaview(APIView):
              schema = cursor.fetchone()[0]
              print("Current schema is ",schema)
     
-class AuthPing:
+class AuthPing(APIView):
     def get(self):
         try:
             print("Ping !!")
