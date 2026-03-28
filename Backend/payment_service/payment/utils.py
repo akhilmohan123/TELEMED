@@ -6,9 +6,11 @@ import os
 # DOCTOR_SERVICE_URL = config('DOCTOR_SERVICE_URL')
 # PATIENT_SERVICE_URL=config('PATIENT_SERVICE_URL')
 ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
-
+URL=os.getenv('URL', 'local')
 if ENVIRONMENT == 'production':
     APPOINTMENT_SERVICE_URL = "http://user-service:8003/"
+elif ENVIRONMENT =="render":
+    APPOINTMENT_SERVICE_URL=URL
 
 else:
 

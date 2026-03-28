@@ -1,7 +1,5 @@
 from django.shortcuts import render
 from rest_framework.views import APIView
-
-
 from .serializers import AppointmentSerializers,GetdoctorAppointmentserializer,GetspeceficSerializer,EditPatientSerializer,AddMedicineSerializer,GetMedicineSerializer,GetSpeceficMedicineSerializer,GetReferAppointmentSerializer
 from rest_framework.permissions import IsAuthenticated,AllowAny
 from .authentication import JWTAuthentication

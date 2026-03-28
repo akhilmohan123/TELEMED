@@ -44,7 +44,7 @@ class CreateOrderView(APIView):
                 "currency": "INR",
                 "payment_capture": 1
             })
-                    # ✅ CREATE PAYMENT RECORD
+                    # CREATE PAYMENT RECORD
             Payment.objects.create(
             appointment_id=appointment_id,
             razorpay_order_id=order["id"],
@@ -146,7 +146,7 @@ class Razorpay_WebhookView(APIView):
             event = payload.get("event")
             print("Webhook event:", event)
 
-            # ---------------- PAYMENT CAPTURED ----------------
+            # PAYMENT CAPTURED
             if event == "payment.captured":
                 print("Webhook called ")
                 payment = payload["payload"]["payment"]["entity"]
