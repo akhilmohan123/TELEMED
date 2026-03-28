@@ -6,7 +6,7 @@ import os
 # DOCTOR_SERVICE_URL = config('DOCTOR_SERVICE_URL')
 # PATIENT_SERVICE_URL=config('PATIENT_SERVICE_URL')
 ENVIRONMENT=os.getenv('ENVIRONMENT', 'local')
-URL=os.getenv('URL', 'local')
+URL=os.getenv('URL')
 if ENVIRONMENT == 'production':
     USER_SERVICE_URL = "http://user-service:8000/"
     DOCTOR_SERVICE_URL = "http://doctor-service:8001/"
