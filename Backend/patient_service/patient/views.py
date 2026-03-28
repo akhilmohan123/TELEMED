@@ -110,7 +110,7 @@ class Getspecificpatientuser(APIView):
             return Response({"error": "Invalid user ID"}, status=status.HTTP_400_BAD_REQUEST)
 class PatientPing(APIView):
     permission_classes = [AllowAny]
-    def get(self):
+    def get(self,request):
         try:
             print("Ping !!")
             return Response({"message":"Pinged"})
