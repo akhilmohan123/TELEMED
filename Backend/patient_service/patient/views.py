@@ -115,5 +115,6 @@ class PatientPing(APIView):
             print("Ping !!")
             return Response({"message":"Pinged"})
         except Exception as e:
-              return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            print(f"Error=== {str(e)}")
+            return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         
