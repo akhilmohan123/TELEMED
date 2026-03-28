@@ -1,5 +1,5 @@
 from django.urls import path
-from . views import Appointmentview,DeleteAppointment,GetDoctorAppointment,GetSpeceficPatient,EditDoctorView,AddMedicineViews,GetMedicineView,GetSpeceficMedicine,GetReferAppointment,Appointmentmarkview,AppointmentStatusmarkview
+from . views import Appointmentview,DeleteAppointment,GetDoctorAppointment,GetSpeceficPatient,EditDoctorView,AddMedicineViews,GetMedicineView,GetSpeceficMedicine,GetReferAppointment,Appointmentmarkview,AppointmentStatusmarkview,AppointPing
 urlpatterns = [
    path('api/appointments',Appointmentview.as_view(),name='createdoctor'),
    path('api/createdoctor/<int:id>',Appointmentview.as_view(),name='createdoctor'),
@@ -14,4 +14,5 @@ urlpatterns = [
    path('api/appointment/<int:id>',Appointmentview.as_view(),name='appointment'),
    path('api/appointment-mark/<int:id>',Appointmentmarkview.as_view(),name='appointment-mark'),
    path('api/appointment-mark-status/<int:id>',AppointmentStatusmarkview.as_view(),name='appointmentstatus-mark'),
+    path('api/ping',AppointPing.as_view(),name='ping-appoint')
 ]

@@ -14,6 +14,7 @@ from django.db import connection
 from django.core.mail import send_mail
 from django.conf import settings
 from .authentication import JWTAuthentication
+from rest_framework import status
 class RegistrationView(APIView):
     permission_classes=[AllowAny]
     def post(self,request):
@@ -204,3 +205,11 @@ class Checkschemaview(APIView):
              schema = cursor.fetchone()[0]
              print("Current schema is ",schema)
     
+class AuthPing:
+    def get(self):
+        try:
+            print("Ping !!")
+            return Response({"message":"Pinged"})
+        except Exception as e:
+              return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        

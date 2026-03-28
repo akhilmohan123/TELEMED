@@ -280,3 +280,13 @@ class AppointmentStatusmarkview(APIView):
                  return Response({"message":"Appointment not found"},status=status.HTTP_404_NOT_FOUND)
           except Exception as e:
               return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+          
+
+class AppointPing:
+    def get(self):
+        try:
+            print("Ping !!")
+            return Response({"message":"Pinged"})
+        except Exception as e:
+              return Response({"message":"An error occurred"},status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        
