@@ -177,6 +177,7 @@ class ChangeDoctorstatus(APIView):
     
 
 class DoctorPing(APIView):
+    permission_classes = [AllowAny]
     def get(self):
         try:
             print("Ping !!")

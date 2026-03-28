@@ -210,6 +210,7 @@ class Checkschemaview(APIView):
              print("Current schema is ",schema)
     
 class AuthPing(APIView):
+    permission_classes = [AllowAny]
     def get(self):
         try:
             print("Ping !!")
