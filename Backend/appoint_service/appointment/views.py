@@ -95,6 +95,7 @@ class Appointmentview(APIView):
 
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
     def update(self, request, *args, **kwargs):
