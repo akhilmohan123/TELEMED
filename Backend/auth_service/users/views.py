@@ -15,6 +15,9 @@ from django.core.mail import send_mail
 from django.conf import settings
 from .authentication import JWTAuthentication
 from rest_framework import status
+from dotenv import load_dotenv
+import os
+load_dotenv()
 class RegistrationView(APIView):
     permission_classes=[AllowAny]
     def post(self,request):
@@ -117,6 +120,7 @@ class LogoutView(APIView):
 class ForgotPasswordView(APIView):
     permission_classes=[AllowAny]
     def post(Self,request):
+        URL=os.getenv('URL', 'local')
         email=request.data.get('email')
         print("email is ",email)
         if isinstance(email, dict):
