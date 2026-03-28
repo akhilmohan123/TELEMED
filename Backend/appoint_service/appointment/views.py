@@ -282,7 +282,7 @@ class AppointmentStatusmarkview(APIView):
 
 class AppointPing(APIView):
     permission_classes = [AllowAny]
-    def get(self):
+    def get(self,request):
         try:
             print("Ping !!")
             return Response({"message":"Pinged"})

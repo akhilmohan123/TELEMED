@@ -10,7 +10,7 @@ class Video_Call_View:
 
 class Videoping(APIView):
     permission_classes = [AllowAny]
-    def get(self):
+    def get(self,request):
         try:
             print("Ping !!")
             return Response({"message":"Ping"})

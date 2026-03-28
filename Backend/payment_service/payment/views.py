@@ -235,7 +235,7 @@ class CheckPaymentstatusview(APIView):
 
 class PaymentPing(APIView):
     permission_classes = [AllowAny]
-    def get(self):
+    def get(self,request):
         try:
             print("Ping !!")
             return Response({"message":"Pinged"})
