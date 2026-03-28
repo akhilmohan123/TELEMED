@@ -7,7 +7,7 @@ urlpatterns=[
     path('api/get-all-doctors/',GetAllDoctors.as_view(),name='get-all-doctors'), 
     path('api/get-doctor/<str:doctor_id>/',GetSpeceficDoctor.as_view(),name='get-doctor'),
     path('api/get-user-id-doctor/<int:user_id>/',GetSpeceficDoctorid.as_view(),name='get-user-id-doctor'),
-    path('api/change-doctor-status/<str:id>/',ChangeDoctorstatus.as_view(),name="change-doctor-status"),DoctorPing
+    path('api/change-doctor-status/<str:id>/',ChangeDoctorstatus.as_view(),name="change-doctor-status"),
     path('api/get-doctor-details/<int:doctor_id>/',GetSpeceficDoctor.as_view(),name="get-doctor-details"),
     path('api/ping',DoctorPing.as_view(),name="DoctorPing")              
 
