@@ -65,6 +65,7 @@ class Appointmentview(APIView):
             raise AuthenticationFailed("Token expired")
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
     def post(self, request, id):
@@ -111,6 +112,7 @@ class Appointmentview(APIView):
 
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -127,6 +129,7 @@ class DeleteAppointment(APIView):
             return Response(status=status.HTTP_200_OK)
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -155,6 +158,7 @@ class GetDoctorAppointment(APIView):
             raise AuthenticationFailed("Invalid token")
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -171,6 +175,7 @@ class GetSpeceficPatient(APIView):
             return Response(serializer.data)
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -204,6 +209,7 @@ class EditDoctorView(APIView):
             return Response({"error": "Appointment not found"}, status=404)
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -224,6 +230,7 @@ class AddMedicineViews(APIView):
 
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -247,6 +254,7 @@ class GetMedicineView(APIView):
 
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -261,6 +269,7 @@ class GetSpeceficMedicine(APIView):
             return Response(serializer.data)
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -282,6 +291,7 @@ class GetReferAppointment(APIView):
 
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -299,6 +309,7 @@ class Appointmentmarkview(APIView):
             return Response({"message": "Appointment marked as paid"})
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -314,6 +325,7 @@ class AppointmentStatusmarkview(APIView):
             return Response({"message": "Completed"})
         except Exception as e:
             traceback.print_exc()
+            print(f"Execption is === {str(e)}")
             return Response({"error": str(e)}, status=500)
 
 
@@ -326,4 +338,5 @@ class AppointPing(APIView):
         try:
             return Response({"message": "Pinged"})
         except Exception:
+            print(f"Execption is === {str(e)}")
             return Response({"message": "Error"}, status=500)
