@@ -89,7 +89,7 @@ class Appointmentview(APIView):
                     patient_id = get_patient_id_from_user(request.user.id)
                     serializer.save(patient_id=patient_id)
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
-
+                print("serializer error is ===", serializer.errors)
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
             return Response({"message": "Doctor not available"}, status=400)
